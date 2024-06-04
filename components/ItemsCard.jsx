@@ -1,19 +1,12 @@
 import React from 'react';
 import { Card, Button } from '@rneui/base';
+import { Link } from 'expo-router';
 
-const ItemsCard = ({titulo="Semillas"}) => {
+const ItemsCard = ({titulo="Semillas", screen="/semillas"}) => {
   return (
-    <Button
-      buttonStyle={{ width: 150 }}
-      containerStyle={{ margin: 5 }}
-      disabledStyle={{
-        borderWidth: 2,
-        borderColor: "#00F"
-      }}
-      onPress={() => alert("Ir a la  sección de " + titulo)}
-      title={titulo}
-      titleStyle={{ marginHorizontal: 5 }}
-    />
+    <Link href={screen} style={{ backgroundColor: "#379eff", color: "white", padding: 10, margin: 10 }}  >
+      {titulo}
+    </Link>
   )
 }
 

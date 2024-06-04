@@ -1,4 +1,6 @@
 import { Text, View, ScrollView } from "react-native";
+import { Link } from "expo-router";
+import { Button } from "@rneui/base";
 
 import ItemsCard from "../components/ItemsCard";
 import InputDatos from "../components/InputDatos";
@@ -6,35 +8,10 @@ import CardModal from "../components/CardModal";
 
 export default function Index() {
   return (
-    <ScrollView style={{flex: 1}}>
-      <View
-        style={{
-          flex: 1,
-          flexDirection: "row",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          alignItems: "center",
-          alignContent: "center",
-          height: "100%",
-          gap: 20,
-        }}
-      >
-        <ItemsCard titulo="Plantación" />
-        <ItemsCard titulo="Despachos" />
-        <ItemsCard titulo="Semillas" />
-        <ItemsCard titulo="Químicos" />
-        <ItemsCard titulo="Materiales" />
-        <ItemsCard titulo="Plantas" />
-        <ItemsCard titulo="Tareas" />
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }} >
+          <Link href="/home" style={{ width: "50%",  textAlign: "center", borderBottomWidth: 2, fontSize: 24 }}>
+            Ir a home
+          </Link>
       </View>
-
-      <View>
-        <InputDatos />
-      </View>
-
-      <View>
-        <CardModal />
-      </View>
-    </ScrollView>
   );
 }

@@ -1,17 +1,10 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-const CardPlantacion = () => {
-  return (
-    <View>
-      <Text>CardPlantacion</Text>
-    </View>
-  )
-}
-
-<>
+const CardPlantacion = ({plantacion, fechaInicio}) => {
+  return (<>
   <Card.Title>
-    Plantación
+    {plantacion}
   </Card.Title>
   <Card.Divider />
   <View
@@ -40,7 +33,7 @@ const CardPlantacion = () => {
       }}
     >
       <Text>
-        FechaInicio
+        {fechaInicio}
       </Text>
       
       <Text>
@@ -73,6 +66,10 @@ const CardPlantacion = () => {
    
   </View>
 </>
+
+  )
+}
+
 
 
 export default CardPlantacion

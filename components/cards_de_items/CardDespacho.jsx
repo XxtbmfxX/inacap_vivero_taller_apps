@@ -1,7 +1,7 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-const CardDespacho = () => {
+const CardDespacho = ({despachos, pedido, , fechaSolicitud,fechaRetiro,num_guia, cantidadPlantas, semillas  }) => {
   return (
     <View>
       <Text>CardDespacho</Text>
@@ -9,7 +9,7 @@ const CardDespacho = () => {
   )
 }
  <>
-      <Card.Title>Despachos</Card.Title>
+      <Card.Title>{despachos}</Card.Title>
       <Card.Divider />
       <View
         style={{
@@ -39,14 +39,14 @@ const CardDespacho = () => {
               fontWeight: "bold",
             }}
           >
-            Pedido
+            {pedido}
           </Text>
           <Text
             style={{
               fontSize: 15,
             }}
           >
-            Num guía#
+            {num_guia}
           </Text>
         </View>
 
@@ -58,8 +58,8 @@ const CardDespacho = () => {
             margin: 15
           }}
         >
-          <Text>FechaSolicitud</Text>
-          <Text>FechaRetiro</Text>
+          <Text>{fechaSolicitud}</Text>
+          <Text>{fechaRetiro}</Text>
         </View>
 
         <View
@@ -70,7 +70,7 @@ const CardDespacho = () => {
             margin: 15,
           }}
         >
-          <Text>CantidadPlantas #</Text>
+          <Text>{cantidadPlantas} #</Text>
         </View>
 
         <View
@@ -95,7 +95,7 @@ const CardDespacho = () => {
             alignItems: "bottom",
           }}
         >
-          <Text>N° Semillas</Text>
+          <Text>{n°_semillas}</Text>
 
         </View>
         

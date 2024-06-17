@@ -1,7 +1,7 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-const CardQuimicos = () => {
+const CardQuimicos = ({quimicos, fechaIngreso, cantidad, contenido, necesidadesltkg,categoria,presentacion}) => {
   return (
     <View>
       <Text>CardQuimicos</Text>
@@ -11,7 +11,7 @@ const CardQuimicos = () => {
 
 <>
   <Card.Title>
-    Químicos
+    {quimicos}
   </Card.Title>
   <Card.Divider />
   <View
@@ -59,7 +59,7 @@ const CardQuimicos = () => {
       }}
     >
       <Text>
-        FechaIngreso
+        {fechaIngreso}
       </Text>
     </View>
 
@@ -76,9 +76,9 @@ const CardQuimicos = () => {
       <Text></Text>
       <Text></Text>
       <Text>
-        Cantidad
+        {cantidad
         #(stock)/#(stock
-        minimo)
+        minimo)}
       </Text>
     </View>
 
@@ -91,7 +91,7 @@ const CardQuimicos = () => {
         margin: 15
       }}
     >
-      <Text>Contenido</Text>
+      <Text>{contenido}</Text>
     </View>
 
     <View
@@ -104,7 +104,7 @@ const CardQuimicos = () => {
       }}
     >
       <Text>
-        Necesidades lt/kg
+        {necesidadesltkg}
       </Text>
     </View>
 
@@ -117,9 +117,9 @@ const CardQuimicos = () => {
         margin: 15
       }}
     >
-      <Text>Categoría</Text>
+      <Text>{categoria}</Text>
       <Text>
-        Presentación
+        {presentacion}
       </Text>
     </View>
   </View>

@@ -1,7 +1,7 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-const CardPlantacion = ({plantacion, fechaInicio}) => {
+const CardPlantacion = ({plantacion, fechaInicio, fechaTermino,}) => {
   return (<>
   <Card.Title>
     {plantacion}
@@ -37,7 +37,7 @@ const CardPlantacion = ({plantacion, fechaInicio}) => {
       </Text>
       
       <Text>
-        FechaTermino
+        {fechaTermino}
       </Text>
     </View>
 

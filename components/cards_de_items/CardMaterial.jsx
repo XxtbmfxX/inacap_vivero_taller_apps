@@ -1,7 +1,7 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-const CardMaterial = () => {
+const CardMaterial = ({materiales, nombre, unidadDeMedida,cantidad }) => {
   return (
     <View>
       <Text>CardMaterial</Text>
@@ -11,7 +11,7 @@ const CardMaterial = () => {
 
  <>
   <Card.Title>
-    Materiales
+    {materiales}
   </Card.Title>
   <Card.Divider />
   <View
@@ -40,7 +40,7 @@ const CardMaterial = () => {
       }}
     >
       <Text style = {{fontSize: 17}}>
-        Nombre
+        {nombre}
       </Text>
 
     </View>
@@ -55,7 +55,7 @@ const CardMaterial = () => {
       }}
     >
       <Text style>
-      Unidad de medida
+        {unidadDeMedida}
       </Text>
 
     </View>
@@ -73,7 +73,7 @@ const CardMaterial = () => {
             <Text></Text>
                 <Text></Text>
       <Text>
-      Cantidad #
+        {cantidad}
       </Text>
 
     </View>

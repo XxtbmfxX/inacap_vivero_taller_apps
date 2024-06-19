@@ -3,13 +3,7 @@ import React from 'react'
 
 const CardMaterial = ({materiales, nombre, unidadDeMedida,cantidad }) => {
   return (
-    <View>
-      <Text>CardMaterial</Text>
-    </View>
-  )
-}
-
- <>
+    <>
   <Card.Title>
     {materiales}
   </Card.Title>
@@ -81,5 +75,9 @@ const CardMaterial = ({materiales, nombre, unidadDeMedida,cantidad }) => {
    
   </View>
 </>
+  )
+}
+
+ 
 
 export default CardMaterial

@@ -1,6 +1,6 @@
-import { ScrollView, Text } from 'react-native'
-import React from 'react'
-
+import { ScrollView,Text } from 'react-native';
+import React from 'react';
+import Navegacion from './Navegacion';
 import CardTareas from '../../components/cards_de_items/CardTareas'
 
 const db = [
@@ -31,6 +31,8 @@ const db = [
 const index = () => {
   return (
     <ScrollView contentContainerStyle={{ alignItems: "center" }}>
+      <Text>Tareas</Text>
+      <Navegacion titulo={"agregar tareas"} screen={"/tareas/add_tarea"} />
       {db.map((tarea, indice) => (
         <CardTareas
           nombreTarea={tarea.nombreTarea}

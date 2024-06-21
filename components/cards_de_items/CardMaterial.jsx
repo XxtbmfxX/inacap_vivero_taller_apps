@@ -1,83 +1,55 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { View, Text } from "react-native";
+import React from "react";
 
-const CardMaterial = ({materiales, nombre, unidadDeMedida,cantidad }) => {
+import { Card } from "@rneui/base";
+
+const CardMaterial = ({
+  nombreMaterial = "Nombre del Material",
+  unidadDeMedida = "cm",
+  cantidad = 12,
+}) => {
   return (
     <>
-  <Card.Title>
-    {materiales}
-  </Card.Title>
-  <Card.Divider />
-  <View
-    style={{
-      position: "relative",
-      alignItems: "left",
-      backgroundColor:
-        "lightgray",
-      width: 300,
-      height: 130,
-      borderTopLeftRadius: 15,
-      borderTopRightRadius: 15,
-      borderBottomLeftRadius: 15,
-      borderBottomRightRadius: 15
-    }}
-  >
-    <View
-      style={{
-        flex: 1,
-        flexDirection:
-          "row",
-        gap: 80,
-        margin: 25,
-        alignItems:
-          "baseline"
-      }}
-    >
-      <Text style = {{fontSize: 17}}>
-        {nombre}
-      </Text>
+      <Card.Divider />
+      <View
+        style={{
+          position: "relative",
+          alignItems: "left",
+          backgroundColor: "lightgray",
+          width: 300,
+          borderTopLeftRadius: 15,
+          borderTopRightRadius: 15,
+          borderBottomLeftRadius: 15,
+          borderBottomRightRadius: 15,
+          marginBottom: 30
+        }}
+      >
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            justifyContent: "center",
+          }}
+        >
+          <Card.Title style={{ fontSize: 17 }}>{nombreMaterial}</Card.Title>
+        </View>
 
-    </View>
+        <View
+          style={{
+            flex: 10,
+            flexDirection: "row",
+            gap: 40,
+            margin: 15,
+          }}
+        >
+          <Text style={{ fontSize: 17 }}>
+            {cantidad}
+            {unidadDeMedida}
+          </Text>
+        </View>
+      </View>
+    </>
+  );
+};
 
-    <View
-      style={{
-        flex: 10,
-        flexDirection:
-          "row",
-        gap: 40,
-        margin: 15
-      }}
-    >
-      <Text style>
-        {unidadDeMedida}
-      </Text>
-
-    </View>
-    <View
-      style={{
-        flex: 10,
-        flexDirection:
-          "row",
-        gap: 47,
-        margin: 10
-      }}
-    >
-    <Text></Text>
-        <Text></Text>
-            <Text></Text>
-                <Text></Text>
-      <Text>
-        {cantidad}
-      </Text>
-
-    </View>
-    
-   
-  </View>
-</>
-  )
-}
-
- 
-
-export default CardMaterial
+export default CardMaterial;

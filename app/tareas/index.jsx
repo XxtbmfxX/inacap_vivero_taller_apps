@@ -1,45 +1,38 @@
-import { ScrollView, Text } from 'react-native'
-import React from 'react'
-
+import { ScrollView, Text} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Navegacion from './Navegacion';
 import CardTareas from '../../components/cards_de_items/CardTareas'
 
-const db = [
-  {
-    nombreTarea: "Reunión de equipo",
-    descripción: "Preparación para la reunión semanal de equipo.",
-  },
-  {
-    nombreTarea: "Desarrollo de nuevas funciones",
-    descripción: "Implementación de nuevas características en la aplicación.",
-  },
-  {
-    nombreTarea: "Informe mensual",
-    descripción: "Elaboración del informe mensual de rendimiento.",
-  },
-  {
-    nombreTarea: "Pruebas de calidad",
-    descripción: "Realización de pruebas de calidad y rendimiento del software.",
-  },
-  {
-    nombreTarea: "Capacitación de nuevos empleados",
-    descripción: "Organización de la capacitación para los nuevos empleados.",
-  },
-];
+const Index = () => {
+  const [tareas, setTareas] = useState([]);
 
+  const cargarTareas = async () => {
+    try {
+      const tareasGuardadas = await AsyncStorage.getItem('tareas');
+      const tareas = tareasGuardadas ? JSON.parse(tareasGuardadas) : [];
+      setTareas(tareas);
+    } catch (error) {
+      console.error('Error al cargar las tareas:', error);
+    }
+  };
 
-
-const index = () => {
+  useEffect(() => {
+    cargarTareas();
+  }, []);
   return (
     <ScrollView contentContainerStyle={{ alignItems: "center" }}>
-      {db.map((tarea, indice) => (
+      <Text>Tareas</Text>
+      <Navegacion titulo={"agregar tareas"} screen={"/tareas/add_tarea"} />
+      {tareas.map((tarea, indice) => (
         <CardTareas
           nombreTarea={tarea.nombreTarea}
-          descripción={tarea.descripción}
+          descripción={tarea.descripcion}
           key={indice}
         />
       ))}
     </ScrollView>
-  )
-}
+  );
+};
 
-export default index
+export default Index;

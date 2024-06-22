@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ScrollView} from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { validarFormularioTarea } from './validaciones'; 
 
 const AgregarTareasForm = () => {
@@ -9,17 +10,25 @@ const AgregarTareasForm = () => {
   const [errores, setErrores] = useState({});
   const router = useRouter();
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const erroresValidacion = validarFormularioTarea(nombreTarea, descripcionTarea);
     if (Object.keys(erroresValidacion).length > 0) {
       setErrores(erroresValidacion);
       return;
     }
 
-    console.log('Nombre de Tarea:', nombreTarea);
-    console.log('Descripción de Tarea:', descripcionTarea);
+    const nuevaTarea = { nombreTarea, descripcion: descripcionTarea };
 
-    router.push('/tareas');
+    try {
+      const tareasGuardadas = await AsyncStorage.getItem('tareas');
+      const tareas = tareasGuardadas ? JSON.parse(tareasGuardadas) : [];
+      tareas.push(nuevaTarea);
+      await AsyncStorage.setItem('tareas', JSON.stringify(tareas));
+
+      router.push('/tareas');
+    } catch (error) {
+      console.error('Error al guardar la tarea:', error);
+    }
   };
 
   return (

@@ -21,7 +21,7 @@ export default function App() {
 
     supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
-
+      console.log(session)
       irABodega()
     })
   }, [])
@@ -32,7 +32,3 @@ export default function App() {
     </View>
   )
 }
-
-          // <Link href="/home" style={{ width: "50%",  textAlign: "center", borderBottomWidth: 2, fontSize: 24 }}>
-          //   Ir a home
-          // </Link>

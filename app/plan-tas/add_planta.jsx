@@ -1,17 +1,46 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Picker } from 'react-native';
 
 const AgregarPlantasForm = () => {
-  const [especie, setEspecie] = useState('');
-  const [anioDespacho, setAnioDespacho] = useState('');
-  const [numeroSector, setNumeroSector] = useState('');
-  const [numeroPlatabanda, setNumeroPlatabanda] = useState('');
 
-  const handleSubmit = () => {
-    console.log('Especie:', especie);
-    console.log('Año de Despacho:', anioDespacho);
-    console.log('Número de Sector:', numeroSector);
-    console.log('Número de Platabanda:', numeroPlatabanda);
+
+
+  const [planta, setPlanta] = useState({
+    especie: "",
+    sector: "",
+    añoDespacho: "",
+
+  });
+
+  const handleChange = (field, value) => {
+    setPlanta((prevState) => ({
+      ...prevState,
+      [field]: value,
+    }));
+  };
+
+  const router = useRouter();
+
+  const handleSubmit = async () => {
+    //Agregar Validaciones
+
+    //spread operator
+    const nuevaPlanta = { ...planta };
+
+    try {
+      const plantasGuardadas = await AsyncStorage.getItem("plantas");
+      const plantas = plantasGuardadas
+        ? JSON.parse(plantasGuardadas)
+        : [];
+      plantas.push(nuevaPlanta);
+      await AsyncStorage.setItem("plantas", JSON.stringify(plantas));
+
+      router.push("/plan-tas");
+    } catch (error) {
+      console.error("Error al guardar la Planta:", error);
+    }
   };
 
   return (
@@ -20,28 +49,23 @@ const AgregarPlantasForm = () => {
       <TextInput
         style={styles.input}
         placeholder="Especie"
-        value={especie}
-        onChangeText={text => setEspecie(text)}
+        value={planta.especie}
+        onChangeText={text => handleChange("especie", text)}
       />
       <TextInput
         style={styles.input}
         placeholder="Año de Despacho"
-        value={anioDespacho}
-        onChangeText={text => setAnioDespacho(text)}
+        value={planta.añoDespacho}
+        onChangeText={text => handleChange("añoDespacho", text)}
         keyboardType="numeric"
       />
       <TextInput
         style={styles.input}
         placeholder="Número de Sector"
-        value={numeroSector}
-        onChangeText={text => setNumeroSector(text)}
+        value={planta.sector}
+        onChangeText={text => handleChange("sector", text)}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Número de Platabanda"
-        value={numeroPlatabanda}
-        onChangeText={text => setNumeroPlatabanda(text)}
-      />
+     
       <Button title="Guardar" onPress={handleSubmit} />
     </View>
   );

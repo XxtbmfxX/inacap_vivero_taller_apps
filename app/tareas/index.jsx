@@ -1,8 +1,9 @@
 import { ScrollView, Text} from 'react-native';
 import React, { useState, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Navegacion from './Navegacion';
+import Navegacion from '../../components/Navegacion';
 import CardTareas from '../../components/cards_de_items/CardTareas'
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Index = () => {
   const [tareas, setTareas] = useState([]);
@@ -20,6 +21,7 @@ const Index = () => {
   useEffect(() => {
     cargarTareas();
   }, []);
+
   return (
     <ScrollView contentContainerStyle={{ alignItems: "center" }}>
       <Text>Tareas</Text>

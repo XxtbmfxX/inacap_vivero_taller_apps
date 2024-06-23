@@ -1,9 +1,13 @@
-import { View, Text } from 'react-native'
+import { View, Text, Touchable } from 'react-native'
 import { Link } from 'expo-router';
-
-import React from 'react'
+import supabase from '@supabase/supabase-js'
 
 import ItemsCard from '../../components/ItemsCard'
+import { Button } from '@rneui/base';
+
+
+
+
 
 const index = () => {
   return (

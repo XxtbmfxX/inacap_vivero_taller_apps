@@ -1,23 +1,47 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Picker } from 'react-native';
 
 const AgregarQuimicosForm = () => {
-  const [nombre, setNombre] = useState('');
-  const [fechaIngreso, setFechaIngreso] = useState('');
-  const [contenido, setContenido] = useState('');
-  const [categoria, setCategoria] = useState('');
-  const [presentacion, setPresentacion] = useState('');
-  const [etiqueta, setEtiqueta] = useState('');
-  const [bodega, setBodega] = useState('');
+  const [errores, setErrores] = useState({});
 
-  const handleSubmit = () => {
-    console.log('Nombre:', nombre);
-    console.log('Fecha de Ingreso:', fechaIngreso);
-    console.log('Contenido:', contenido);
-    console.log('Categoría:', categoria);
-    console.log('Presentación:', presentacion);
-    console.log('Etiqueta:', etiqueta);
-    console.log('Bodega:', bodega);
+  const [quimico, setQuimico] = useState({
+    nombre: "",
+    fechaIngreso: "",
+    contenido: "",
+    categoria: "",
+    presentacion: "",
+    etiqueta: "",
+    bodega: ""
+  });
+
+  const router = useRouter();
+
+  const handleChange = (field, value) => {
+    setQuimico(prevState => ({
+      ...prevState,
+      [field]: value,
+    }));
+  };
+
+  const handleSubmit = async () => {
+    //agregar validación de texto
+
+
+    //spread operator
+    const nuevoQuimico = { ...quimico };
+
+    try {
+      const quimicosGuardados = await AsyncStorage.getItem("quimicos");
+      const quimicos = quimicosGuardados ? JSON.parse(quimicosGuardados) : [];
+      quimicos.push(nuevoQuimico);
+      await AsyncStorage.setItem("quimicos", JSON.stringify(quimicos));
+
+      router.push("/quimicos");
+    } catch (error) {
+      console.error("Error al guardar el químico:", error);
+    }
   };
 
   return (
@@ -26,44 +50,44 @@ const AgregarQuimicosForm = () => {
       <TextInput
         style={styles.input}
         placeholder="Nombre"
-        value={nombre}
-        onChangeText={text => setNombre(text)}
+        value={quimico.nombre}
+        onChangeText={text => handleChange('nombre', text)}
       />
       <TextInput
         style={styles.input}
         placeholder="Fecha de Ingreso"
-        value={fechaIngreso}
-        onChangeText={text => setFechaIngreso(text)}
+        value={quimico.fechaIngreso}
+        onChangeText={text => handleChange('fechaIngreso', text)}
       />
       <TextInput
         style={styles.input}
         placeholder="Contenido"
-        value={contenido}
-        onChangeText={text => setContenido(text)}
+        value={quimico.contenido}
+        onChangeText={text => handleChange('contenido', text)}
       />
       <TextInput
         style={styles.input}
         placeholder="Categoría"
-        value={categoria}
-        onChangeText={text => setCategoria(text)}
+        value={quimico.categoria}
+        onChangeText={text => handleChange('categoria', text)}
       />
       <TextInput
         style={styles.input}
         placeholder="Presentación"
-        value={presentacion}
-        onChangeText={text => setPresentacion(text)}
+        value={quimico.presentacion}
+        onChangeText={text => handleChange('presentacion', text)}
       />
       <TextInput
         style={styles.input}
         placeholder="Etiqueta"
-        value={etiqueta}
-        onChangeText={text => setEtiqueta(text)}
+        value={quimico.etiqueta}
+        onChangeText={text => handleChange('etiqueta', text)}
       />
       <TextInput
         style={styles.input}
         placeholder="Bodega"
-        value={bodega}
-        onChangeText={text => setBodega(text)}
+        value={quimico.bodega}
+        onChangeText={text => handleChange('bodega', text)}
       />
       <Button title="Guardar" onPress={handleSubmit} />
     </View>

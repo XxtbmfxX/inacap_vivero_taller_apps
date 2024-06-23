@@ -1,64 +1,43 @@
 import { View, Text, ScrollView } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
+
+
+import Navegacion from "../../components/Navegacion";
 
 import CardPlatacion from "../../components/cards_de_items/CardPlantacion";
-
-const db = [
-  {
-    especies: ["rosas", "hortalizas", "menta"],
-    fechaInicio: "16-02-2024",
-    fechaTermino: "16-03-2024",
-    numeroCosecha: 3,
-    plantacion: "🤯🤯🤯",
-  },
-  {
-    especies: ["tomates", "albahaca", "lavanda"],
-    fechaInicio: "01-03-2024",
-    fechaTermino: "01-04-2024",
-    numeroCosecha: 2,
-    plantacion: "🍅🌿💜",
-  },
-  {
-    especies: ["girasoles", "pepino", "romero"],
-    fechaInicio: "15-03-2024",
-    fechaTermino: "15-04-2024",
-    numeroCosecha: 1,
-    plantacion: "🌻🥒🌿",
-  },
-  {
-    especies: ["zanahorias", "cilantro", "menta"],
-    fechaInicio: "01-04-2024",
-    fechaTermino: "01-05-2024",
-    numeroCosecha: 4,
-    plantacion: "🥕🌿🌱",
-  },
-  {
-    especies: ["lechuga", "perejil", "tomillo"],
-    fechaInicio: "10-04-2024",
-    fechaTermino: "10-05-2024",
-    numeroCosecha: 3,
-    plantacion: "🥬🌿🌱",
-  },
-  {
-    especies: ["pepino", "espinaca", "oregano"],
-    fechaInicio: "20-04-2024",
-    fechaTermino: "20-05-2024",
-    numeroCosecha: 2,
-    plantacion: "🥒🌿🌿",
-  },
-];
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const index = () => {
+
+  const [plantacion, setPlantacion] = useState([]);
+
+  const cargarPlantaciones = async () => {
+    try {
+      const plantacionesGuardadas = await AsyncStorage.getItem('plantaciones');
+      const plantaciones = plantacionesGuardadas ? JSON.parse(plantacionesGuardadas) : [];
+      setPlantacion(plantaciones);
+    } catch (error) {
+      console.error('Error al cargar las plantaciones:', error);
+    }
+  };
+
+  useEffect(() => {
+    cargarPlantaciones();
+  }, []);
+
   return (
     <ScrollView>
+
       <Text>Plantación</Text>
-
+   <Navegacion titulo={"Agregar Plantación"} screen={"/planta-cion/add_plantacion"} />
       {
-        db.map((plantacion, indice) => (
-          <CardPlatacion especies={plantacion.especies} fechaInicio={plantacion.fechaInicio} fechaTermino={plantacion.fechaTermino} numeroCosecha={plantacion.numeroCosecha} plantacion={plantacion.plantacion} key={indice} />
+        plantacion.length > 0 ?
+        plantacion.map((plantacion, indice) => (
+          // especies={plantacion.especies} // requiere de validar el formulario
+          <CardPlatacion  fechaInicio={plantacion.fechaInicio} fechaTermino={plantacion.fechaTermino} numeroCosecha={plantacion.numeroCosecha} plantacion={plantacion.plantacion} key={indice} />
 
-        ) )
+        ) ):
+        <Text>No hay plantaciones unu </Text>
       }
 
      

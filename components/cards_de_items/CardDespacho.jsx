@@ -15,25 +15,25 @@ const CardDespacho = ({
       <Card.Divider />
       <View
         style={{
+          display: "grid",
           position: "relative",
           alignItems: "left",
           backgroundColor: "lightgray",
           width: 350,
           height: 350,
+          paddingLeft: 15,
           borderTopLeftRadius: 15,
           borderTopRightRadius: 15,
           borderBottomLeftRadius: 15,
           borderBottomRightRadius: 15,
         }}
       >
-      <Card.Title>{pedido}</Card.Title>
+        <Card.Title>{pedido}</Card.Title>
 
         <View
           style={{
-            flex: 5,
             flexDirection: "row",
             gap: 20,
-            margin: 15,
             alignItems: "baseline",
           }}
         >
@@ -57,10 +57,8 @@ const CardDespacho = ({
 
         <View
           style={{
-            flex: 5,
             flexDirection: "row",
             gap: 20,
-            margin: 15,
           }}
         >
           <Text>{fechaSolicitud}</Text>
@@ -80,10 +78,8 @@ const CardDespacho = ({
 
         <View
           style={{
-            flex: 1,
             flexDirection: "row",
             gap: 30,
-            margin: 40,
             alignItems: "bottom",
           }}
         >
@@ -91,12 +87,11 @@ const CardDespacho = ({
           <Text>Especie</Text>
           <Text>Especie</Text>
         </View>
+
         <View
           style={{
-            flex: 10,
             flexDirection: "row",
             gap: 30,
-            margin: 15,
             alignItems: "bottom",
           }}
         >
@@ -105,10 +100,8 @@ const CardDespacho = ({
 
         <View
           style={{
-            flex: 10,
             flexDirection: "row",
             gap: 30,
-            margin: 15,
             alignItems: "bottom",
           }}
         >

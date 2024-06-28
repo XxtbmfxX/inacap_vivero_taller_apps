@@ -1,36 +1,54 @@
-import { ScrollView, Text} from 'react-native';
-import React, { useState, useEffect } from 'react';
+import { ScrollView, Text } from 'react-native';
+import React, { useState } from 'react';
 import Navegacion from '../../components/Navegacion';
-import CardTareas from '../../components/cards_de_items/CardTareas'
+import CardTareas from '../../components/cards_de_items/CardTareas';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from 'expo-router';
+
+
+const initialDb = [
+  {
+    nombreTarea: "Reunión de equipo",
+    descripción: "Preparación para la reunión semanal de equipo.",
+  },
+  // ...otras tareas
+];
 
 const Index = () => {
-  const [tareas, setTareas] = useState([]);
+  const [db, setDb] = useState(initialDb);
 
-  const cargarTareas = async () => {
-    try {
-      const tareasGuardadas = await AsyncStorage.getItem('tareas');
-      const tareas = tareasGuardadas ? JSON.parse(tareasGuardadas) : [];
-      setTareas(tareas);
-    } catch (error) {
-      console.error('Error al cargar las tareas:', error);
-    }
+  // █████   ██████  ██████  ███████  ██████  ██    ██ ███████     ███████ ██          ██████   ██████  ██    ██ ████████ ███████ ██████  
+  // ██   ██ ██       ██   ██ ██      ██       ██    ██ ██          ██      ██          ██   ██ ██    ██ ██    ██    ██    ██      ██   ██ 
+  // ███████ ██   ███ ██████  █████   ██   ███ ██    ██ █████       █████   ██          ██████  ██    ██ ██    ██    ██    █████   ██████  
+  // ██   ██ ██    ██ ██   ██ ██      ██    ██ ██    ██ ██          ██      ██          ██   ██ ██    ██ ██    ██    ██    ██      ██   ██ 
+  // ██   ██  ██████  ██   ██ ███████  ██████   ██████  ███████     ███████ ███████     ██   ██  ██████   ██████     ██    ███████ ██   ██ 
+                                                                                                                                        
+//en la función de actualizar tarea te envía a update tarea
+//pero tienes que recibir ciertos parámetros en update tarea                                                                                                                                        
+  
+  const actualizarTarea = (indice, nuevaTarea) => {
+
+    router.navigate('/tareas/update_tarea');
+
+    const nuevasTareas = [...db];
+    nuevasTareas[indice] = nuevaTarea;
+    setDb(nuevasTareas);
   };
 
-  useEffect(() => {
-    cargarTareas();
-  }, []);
-
+// La card recibía la función de actualizar tarea pero no se recibía como parámetro en la card
+// hay que describirla en papel primero antes de pasar al código porque creo que si le pones actualizar a una sola
+// la función va a actualizar a todas las demás cards
   return (
     <ScrollView contentContainerStyle={{ alignItems: "center" }}>
       <Text>Tareas</Text>
       <Navegacion titulo={"agregar tareas"} screen={"/tareas/add_tarea"} />
-      {tareas.map((tarea, indice) => (
+      {db.map((tarea, indice) => (
         <CardTareas
           nombreTarea={tarea.nombreTarea}
-          descripción={tarea.descripcion}
+          descripción={tarea.descripción}
           key={indice}
+          indice={indice}
+          actualizarTarea={actualizarTarea}
         />
       ))}
     </ScrollView>

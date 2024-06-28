@@ -29,6 +29,7 @@ export default function App() {
   return (
     <View>
       <Auth />
+      <Text>Este es el index 🥵🥵🥵</Text>
     </View>
   )
 }

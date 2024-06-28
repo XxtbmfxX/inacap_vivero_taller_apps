@@ -2,6 +2,7 @@ import { View, Text, Touchable } from 'react-native'
 import { Link } from 'expo-router';
 import supabase from '@supabase/supabase-js'
 
+import Navegacion from '../../components/Navegacion'
 import ItemsCard from '../../components/ItemsCard'
 import { Button } from '@rneui/base';
 
@@ -24,6 +25,8 @@ const index = () => {
     }}
   >
  <Link href="/modal">Present modal</Link>
+ <Navegacion titulo={"Volver al inicio index"} screen={"/"} />
+
      <ItemsCard titulo="Plantación" screen='planta-cion' /> 
     <ItemsCard titulo="Despachos" screen='despachos'  />
     <ItemsCard titulo="Semillas" screen='semillas'  />

@@ -1,41 +1,43 @@
-import { View, Text, Touchable } from 'react-native'
-import { Link } from 'expo-router';
-import supabase from '@supabase/supabase-js'
+import { View, Text, Touchable, StyleSheet } from "react-native";
+import { Link } from "expo-router";
+import supabase from "@supabase/supabase-js";
 
-import Navegacion from '../../components/Navegacion'
-import ItemsCard from '../../components/ItemsCard'
-import { Button } from '@rneui/base';
-
-
-
-
+import Navegacion from "../../components/Navegacion";
+import ItemsCard from "../../components/ItemsCard";
+import { Button } from "@rneui/base";
 
 const index = () => {
   return (
-    <View
-    style={{
-      flex: 1,
-      flexDirection: "row",
-      flexWrap: "wrap",
-      justifyContent: "center",
-      alignItems: "center",
-      alignContent: "center",
-      height: "100%",
-      gap: 20,
-    }}
-  >
- <Link href="/modal">Present modal</Link>
- <Navegacion titulo={"Volver al inicio index"} screen={"/"} />
+    <View style={styles.container}>
+      <View style={styles.column}>
+        {/* <Navegacion titulo={"Volver al inicio index"} screen={"/"} /> */}
 
-     <ItemsCard titulo="Plantación" screen='planta-cion' /> 
-    <ItemsCard titulo="Despachos" screen='despachos'  />
-    <ItemsCard titulo="Semillas" screen='semillas'  />
-    <ItemsCard titulo="Químicos" screen='quimicos'  />
-    <ItemsCard titulo="Materiales" screen='materiales'  />
-    <ItemsCard titulo="Plantas" screen='plan-tas'  />
-    <ItemsCard titulo="Tareas" screen='tareas'  />
-  </View>
-  )
-}
+        <ItemsCard titulo="Plantación" screen="planta-cion" />
+        <ItemsCard titulo="Despachos" screen="despachos" />
+        <ItemsCard titulo="Semillas" screen="semillas" />
+      </View>
 
-export default index
+      <View style={styles.column}>
+        <ItemsCard titulo="Químicos" screen="quimicos" />
+
+        <ItemsCard titulo="Materiales" screen="materiales" />
+        <ItemsCard titulo="Plantas" screen="plan-tas" />
+        <ItemsCard titulo="Tareas" screen="tareas" />
+      </View>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: "row",
+  },
+  column: {
+    flex: 1,
+    backgroundColor: "#f0f0f0", // color de fondo opcional para visualizar las columnas
+    margin: 5, // margen opcional para separar las columnas
+  },
+});
+
+export default index;

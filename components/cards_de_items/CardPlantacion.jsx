@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 import { Card } from "@rneui/base";
 
@@ -12,54 +12,54 @@ const CardPlantacion = ({
   return (
     <>
       <Card.Divider />
-      <View
-        style={{
-          position: "relative",
-          alignItems: "left",
-          backgroundColor: "lightgray",
-          height: 150,
-          borderTopLeftRadius: 15,
-          borderTopRightRadius: 15,
-          borderBottomLeftRadius: 15,
-          borderBottomRightRadius: 15,
-        }}
-      >
-        <View
-          style={{
-            flex: 40,
-            flexDirection: "row",
-            gap: 80,
-            margin: 15,
-            alignItems: "baseline",
-          }}
-        >
-      <Card.Title>{plantacion}</Card.Title>
-
-          <Text>{fechaInicio}</Text>
-
-          <Text>{fechaTermino}</Text>
+      <View style={styles.cardContainer}>
+        <View style={styles.header}>
+          <Card.Title style={styles.title}>Plantación: {plantacion}</Card.Title>
+          <Text style={styles.text}>Fecha Inicio: {fechaInicio}</Text>
+          <Text style={styles.text}>Fecha Termino: {fechaTermino}</Text>
         </View>
-
-        <View
-          style={{
-            flex: 10,
-            flexDirection: "row",
-            gap: 40,
-            margin: 15,
-          }}
-        >
-          {
-            especies.map((especie) => (
-              <Text>{especie}</Text>
-            ))
-          
-          }
-
-          <Text>{numeroCosecha}</Text>
+        <Text style={styles.subtitle}>Especies</Text>
+        <View style={styles.especiesContainer}>
+          {especies.map((especie, index) => (
+            <Text key={index} style={styles.especieText}>{especie}</Text>
+          ))}
         </View>
+        <Text style={styles.text}>Número Cosecha: {numeroCosecha}</Text>
       </View>
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  cardContainer: {
+    alignItems: 'flex-start',
+    backgroundColor: 'lightgray',
+    borderRadius: 15,
+    padding: 10,
+    justifyContent: 'space-between'
+  },
+  header: {
+    flex: 1,
+    alignItems: 'flex-start',
+    
+  },
+  title: {
+    
+  },
+  text: {
+    marginBottom: 5,
+  },
+  subtitle: {
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  especiesContainer: {
+    flexDirection: 'row',
+    
+  },
+  especieText: {
+    marginRight: 20,
+  },
+});
 
 export default CardPlantacion;

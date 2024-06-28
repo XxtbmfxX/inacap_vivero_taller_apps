@@ -42,50 +42,62 @@ const add_plantacion = () => {
   };
 
   return (
-    <ScrollView>
-        <TextInput
-          style={styles.input}
-          placeholder="Plantacion"
-          value={plantacion.plantacion}
-          onChangeText={(text) => handleChange("plantacion", text)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Especies"
-          value={plantacion.especies}
-          onChangeText={(text) => handleChange("especies", text)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Fecha Inicio"
-          value={plantacion.fechaInicio}
-          onChangeText={(text) => handleChange("fechaInicio", text)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Fecha Termino"
-          value={plantacion.fechaTermino}
-          onChangeText={(text) => handleChange("fechaTermino", text)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Numero cosecha"
-          value={plantacion.numeroCosecha}
-          onChangeText={(text) => handleChange("numeroCosecha", text)}
-        />
-        <Button title="Guardar" onPress={handleSubmit} />
+    <ScrollView
+      contentContainerStyle={{
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Text
+        style={{
+          fontSize: 30,
+          marginHorizontal: "auto",
+          marginVertical: 30,
+        }}
+      >
+        Agregar Plantación
+      </Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Plantacion"
+        value={plantacion.plantacion}
+        onChangeText={(text) => handleChange("plantacion", text)}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Especies"
+        value={plantacion.especies}
+        onChangeText={(text) => handleChange("especies", text)}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Fecha Inicio"
+        value={plantacion.fechaInicio}
+        onChangeText={(text) => handleChange("fechaInicio", text)}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Fecha Termino"
+        value={plantacion.fechaTermino}
+        onChangeText={(text) => handleChange("fechaTermino", text)}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Numero cosecha"
+        value={plantacion.numeroCosecha}
+        onChangeText={(text) => handleChange("numeroCosecha", text)}
+      />
+      <Button
+
+        title="Guardar"
+        onPress={handleSubmit}
+      />
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    padding: 20,
-  },
   title: {
     fontSize: 24,
     fontWeight: "bold",
@@ -95,21 +107,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ccc",
     padding: 10,
-    marginBottom: 10,
-    width: "100%",
+    marginVertical: 20,
+    width: "90%",
     borderRadius: 20,
     backgroundColor: "#D5DBDB",
-  },
-  button: {
-    backgroundColor: "#000",
-    padding: 10,
-    alignItems: "center",
-    marginTop: 10,
-    borderRadius: 10,
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
   },
 });
 

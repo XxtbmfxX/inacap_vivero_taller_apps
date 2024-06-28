@@ -13,7 +13,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { validarFormularioTarea } from "./validaciones";
 
 const AgregarTareasForm = () => {
-  
   const [errores, setErrores] = useState({});
   const [tarea, setTarea] = useState({
     nombreTarea: "",

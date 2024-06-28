@@ -1,7 +1,8 @@
 import { ScrollView, Text } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 
 import CardDespacho from '../../components/cards_de_items/CardDespacho'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const db = [
   {
@@ -47,8 +48,21 @@ const db = [
 ]
 
 const index = () => {
+
+ 
+
+
   return (
     <ScrollView contentContainerStyle={{alignItems: "center"}} >
+         <Text
+        style={{
+          fontSize: 30,
+          marginHorizontal: "auto",
+          marginVertical: 30,
+        }}
+      >
+        Químicos
+      </Text>
       {
         db.map((despacho, indice) => (
           <CardDespacho 

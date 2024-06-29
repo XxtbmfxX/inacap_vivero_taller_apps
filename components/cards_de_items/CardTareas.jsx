@@ -1,10 +1,11 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React, { forwardRef } from "react";
 import { Card } from "@rneui/base";
+import UpdateTarea from "../../app/tareas/update_tarea";
 
 const CardTareas = forwardRef(({ nombreTarea = "Nombre de la Tarea", descripción = "Descripción de la Tarea" }, ref) => {
   return (
-    <TouchableOpacity ref={ref}>
+    <TouchableOpacity onPress={ref}>
       <Card containerStyle={styles.cardContainer}>
         <Card.Title style={styles.cardTitle}>{nombreTarea}</Card.Title>
         <Card.Divider />

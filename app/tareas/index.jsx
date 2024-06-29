@@ -40,7 +40,7 @@ const Index = () => {
           key={indice}
           onPress={() => navegarAEditarTarea(indice, tarea.nombreTarea, tarea.descripcionTarea)}
         >
-          <CardTareas
+          <CardTareas ref={() => navegarAEditarTarea(indice, tarea.nombreTarea, tarea.descripcionTarea)} 
             nombreTarea={tarea.nombreTarea}
             descripción={tarea.descripcionTarea}
           />

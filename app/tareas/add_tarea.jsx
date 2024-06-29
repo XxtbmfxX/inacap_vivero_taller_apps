@@ -6,22 +6,23 @@ import {
   Button,
   StyleSheet,
   ScrollView,
+  Modal,
+  TouchableOpacity,
 } from "react-native";
-
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { validarFormularioTarea } from "./validaciones";
 
-const AgregarTareasForm = () => {
+const AddTarea = () => {
   const [errores, setErrores] = useState({});
   const [tarea, setTarea] = useState({
     nombreTarea: "",
     descripcionTarea: "",
   });
-
+  const [modalVisible, setModalVisible] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     const erroresValidacion = validarFormularioTarea(
       tarea.nombreTarea,
       tarea.descripcionTarea
@@ -30,15 +31,17 @@ const AgregarTareasForm = () => {
       setErrores(erroresValidacion);
       return;
     }
-    //spread operator
-    const nuevaTarea = { ...tarea };
+    setModalVisible(true);
+  };
 
+  const confirmarGuardar = async () => {
+    const nuevaTarea = { ...tarea };
     try {
       const tareasGuardadas = await AsyncStorage.getItem("tareas");
       const tareas = tareasGuardadas ? JSON.parse(tareasGuardadas) : [];
       tareas.push(nuevaTarea);
       await AsyncStorage.setItem("tareas", JSON.stringify(tareas));
-
+      setModalVisible(false);
       router.push("/tareas");
     } catch (error) {
       console.error("Error al guardar la tarea:", error);
@@ -79,52 +82,71 @@ const AgregarTareasForm = () => {
           <Text style={styles.errorText}>{errores.descripcion}</Text>
         )}
         <Button title="Guardar" onPress={handleSubmit} />
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>¿Desea guardar esta tarea?</Text>
+              <View style={styles.modalButtons}>
+                <TouchableOpacity
+                  style={[styles.button, styles.buttonCancel]}
+                  onPress={() => setModalVisible(false)}
+                >
+                  <Text style={styles.textStyle}>Cancelar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.button, styles.buttonConfirm]}
+                  onPress={confirmarGuardar}
+                >
+                  <Text style={styles.textStyle}>Confirmar</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </View>
     </ScrollView>
   );
 };
-
 const styles = StyleSheet.create({
-  scrollContainer: {
-    flexGrow: 1,
-    justifyContent: "center",
-  },
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
     padding: 20,
   },
   title: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 20,
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: '#ccc',
     padding: 10,
     marginBottom: 10,
-    width: "100%",
+    width: '100%',
     borderRadius: 20,
-    backgroundColor: "#D5DBDB",
-  },
-  errorText: {
-    color: "red",
-    marginBottom: 10,
+    backgroundColor: '#D5DBDB',
   },
   button: {
-    backgroundColor: "#000",
+    backgroundColor: '#358',
     padding: 10,
-    alignItems: "center",
+    alignItems: 'center',
     marginTop: 10,
-    borderRadius: 10,
+    borderRadius:10,
   },
   buttonText: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 16,
+    
   },
 });
 
-export default AgregarTareasForm;
+export default AddTarea;

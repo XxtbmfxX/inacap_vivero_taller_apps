@@ -1,55 +1,50 @@
-import { ScrollView, Text } from 'react-native';
-import React, { useState } from 'react';
+import { ScrollView, Text, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
 import Navegacion from '../../components/Navegacion';
 import CardTareas from '../../components/cards_de_items/CardTareas';
-
-import { router } from 'expo-router';
-
-
-const initialDb = [
-  {
-    nombreTarea: "Reunión de equipo",
-    descripción: "Preparación para la reunión semanal de equipo.",
-  },
-  // ...otras tareas
-];
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRouter } from 'expo-router';
 
 const Index = () => {
-  const [db, setDb] = useState(initialDb);
+  const [db, setDb] = useState([]);
+  const router = useRouter();
 
-  // █████   ██████  ██████  ███████  ██████  ██    ██ ███████     ███████ ██          ██████   ██████  ██    ██ ████████ ███████ ██████  
-  // ██   ██ ██       ██   ██ ██      ██       ██    ██ ██          ██      ██          ██   ██ ██    ██ ██    ██    ██    ██      ██   ██ 
-  // ███████ ██   ███ ██████  █████   ██   ███ ██    ██ █████       █████   ██          ██████  ██    ██ ██    ██    ██    █████   ██████  
-  // ██   ██ ██    ██ ██   ██ ██      ██    ██ ██    ██ ██          ██      ██          ██   ██ ██    ██ ██    ██    ██    ██      ██   ██ 
-  // ██   ██  ██████  ██   ██ ███████  ██████   ██████  ███████     ███████ ███████     ██   ██  ██████   ██████     ██    ███████ ██   ██ 
-                                                                                                                                        
-//en la función de actualizar tarea te envía a update tarea
-//pero tienes que recibir ciertos parámetros en update tarea                                                                                                                                        
-  
-  const actualizarTarea = (indice, nuevaTarea) => {
+  useEffect(() => {
+    cargarTareas();
+  }, []);
 
-    router.navigate('/tareas/update_tarea');
-
-    const nuevasTareas = [...db];
-    nuevasTareas[indice] = nuevaTarea;
-    setDb(nuevasTareas);
+  const cargarTareas = async () => {
+    try {
+      const tareasGuardadas = await AsyncStorage.getItem("tareas");
+      if (tareasGuardadas) {
+        setDb(JSON.parse(tareasGuardadas));
+      }
+    } catch (error) {
+      console.error("Error al cargar las tareas:", error);
+    }
   };
 
-// La card recibía la función de actualizar tarea pero no se recibía como parámetro en la card
-// hay que describirla en papel primero antes de pasar al código porque creo que si le pones actualizar a una sola
-// la función va a actualizar a todas las demás cards
+  const navegarAEditarTarea = (indice, nombreTarea, descripcionTarea) => {
+    router.push({
+      pathname: '/tareas/update_tarea',
+      params: { indice, nombreTarea, descripcionTarea }
+    });
+  };
+
   return (
     <ScrollView contentContainerStyle={{ alignItems: "center" }}>
       <Text>Tareas</Text>
       <Navegacion titulo={"agregar tareas"} screen={"/tareas/add_tarea"} />
       {db.map((tarea, indice) => (
-        <CardTareas
-          nombreTarea={tarea.nombreTarea}
-          descripción={tarea.descripción}
+        <TouchableOpacity
           key={indice}
-          indice={indice}
-          actualizarTarea={actualizarTarea}
-        />
+          onPress={() => navegarAEditarTarea(indice, tarea.nombreTarea, tarea.descripcionTarea)}
+        >
+          <CardTareas
+            nombreTarea={tarea.nombreTarea}
+            descripción={tarea.descripcionTarea}
+          />
+        </TouchableOpacity>
       ))}
     </ScrollView>
   );

@@ -5,33 +5,35 @@ import Navegacion from "../../components/Navegacion";
 import ItemsCard from "../../components/ItemsCard";
 import { Button } from "@rneui/base";
 
-import { supabase } from "../../lib/supabase";
+// import { supabase } from "../../lib/supabase";
 import { useEffect, useState } from "react";
 
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  "https://gmqsanwdflqjboqryynz.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdtcXNhbndkZmxxamJvcXJ5eW56Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY1NzA4NDcsImV4cCI6MjAzMjE0Njg0N30.ezQ8J3vsWqjD1LuqhENTGmguYcrGo3hwnCkLlbjqWic"
+);
+
 const index = () => {
-  const [semillas, setSemillas] = useState([]);
-
-  const getItems = async () => {
-    let { data, error} = await supabase
-  .from('quimico')
-  .select('*')
-    console.log(data, error)
-    setSemillas(data);
-
-  };
+  const [químicos, setQuímicos] = useState([]);
 
   useEffect(() => {
     getItems();
   }, []);
 
+  const getItems = async () => {
+    let { data, error } = await supabase.from("quimico").select("*");
+    console.log(data, error, "a");
+    setQuímicos(data);
+  };
+
   return (
     <View style={styles.container}>
-      {semillas.map((semilla) => (
-        <Text>{semilla.nombre}</Text>
+      {químicos.map((quimico) => (
+        <Text>{quimico.nombre}</Text>
       ))}
       <View style={styles.column}>
-        {/* <Navegacion titulo={"Volver al inicio index"} screen={"/"} /> */}
-
         <ItemsCard titulo="Plantación" screen="planta-cion" />
         <ItemsCard titulo="Despachos" screen="despachos" />
         <ItemsCard titulo="Semillas" screen="semillas" />

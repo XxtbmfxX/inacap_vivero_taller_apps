@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#D5DBDB',
   },
   button: {
-    backgroundColor: '#325',
+    backgroundColor: '#f3f3f3',
     padding: 10,
     alignItems: 'center',
     marginTop: 10,
@@ -163,6 +163,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     
   },
+  centeredView: {
+    backgroundColor: "white",
+    height: 500
+  }
 });
 
 

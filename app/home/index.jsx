@@ -1,14 +1,34 @@
 import { View, Text, Touchable, StyleSheet } from "react-native";
 import { Link } from "expo-router";
-import supabase from "@supabase/supabase-js";
 
 import Navegacion from "../../components/Navegacion";
 import ItemsCard from "../../components/ItemsCard";
 import { Button } from "@rneui/base";
 
+import { supabase } from "../../lib/supabase";
+import { useEffect, useState } from "react";
+
 const index = () => {
+  const [semillas, setSemillas] = useState([]);
+
+  const getItems = async () => {
+    let { data, error} = await supabase
+  .from('quimico')
+  .select('*')
+    console.log(data, error)
+    setSemillas(data);
+
+  };
+
+  useEffect(() => {
+    getItems();
+  }, []);
+
   return (
     <View style={styles.container}>
+      {semillas.map((semilla) => (
+        <Text>{semilla.nombre}</Text>
+      ))}
       <View style={styles.column}>
         {/* <Navegacion titulo={"Volver al inicio index"} screen={"/"} /> */}
 

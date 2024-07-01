@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Alert, StyleSheet, View, Text } from 'react-native'
+import { Alert, StyleSheet, View } from 'react-native'
 import { supabase } from '../lib/supabase'
 import { Button, Input } from '@rneui/themed'
 
@@ -14,8 +14,6 @@ export default function Auth() {
       email: email,
       password: password,
     })
-
-    console.log(error)
 
     if (error) Alert.alert(error.message)
     setLoading(false)
@@ -38,13 +36,6 @@ export default function Auth() {
 
   return (
     <View style={styles.container}>
-
-      {
-        loading ? <Text>Loading es verdadero</Text>
-        :
-        <Text>Loading es Falso</Text>
-      }
-
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Input
           label="Email"
@@ -67,10 +58,10 @@ export default function Auth() {
         />
       </View>
       <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Button title="Sign in" disabled={loading} onPress={() => signInWithEmail()} />
+        <Button title="Iniciar sesión" disabled={loading} onPress={() => signInWithEmail()} />
       </View>
       <View style={styles.verticallySpaced}>
-        <Button title="Sign up" disabled={loading} onPress={() => signUpWithEmail()} />
+        <Button title="Registrarse" disabled={loading} onPress={() => signUpWithEmail()} />
       </View>
     </View>
   )

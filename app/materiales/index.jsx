@@ -3,25 +3,20 @@ import React, { useEffect, useState } from "react";
 
 import Navegacion from "../../components/Navegacion";
 import CardMaterial from "../../components/cards_de_items/CardMaterial";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import { supabase } from "../../lib/supabase";
 
 const index = () => {
   const [materiales, setMateriales] = useState([]);
 
-  const cargarMateriales = async () => {
-    try {
-      const materialesGuardadas = await AsyncStorage.getItem("materiales");
-      const materiales = materialesGuardadas
-        ? JSON.parse(materialesGuardadas)
-        : [];
-      setMateriales(materiales);
-    } catch (error) {
-      console.error("Error al cargar las materiales:", error);
-    }
+//Se cambió la función para usar supabase en vez de el AsyncStorage
+  const getItems = async () => {
+    let { data} = await supabase.from("material").select("*");
+    setMateriales(data);
   };
 
   useEffect(() => {
-    cargarMateriales();
+    getItems()
   }, []);
 
   return (
@@ -42,8 +37,8 @@ const index = () => {
       {materiales.length > 0 ? (
         materiales.map((material, indice) => (
           <CardMaterial
-            nombreMaterial={material.nombreMaterial}
-            unidadDeMedida={material.unidadDeMedida}
+            nombreMaterial={material.nombre}
+            unidadDeMedida={material.unidad_de_medida}
             cantidad={material.cantidad}
             key={indice}
           />

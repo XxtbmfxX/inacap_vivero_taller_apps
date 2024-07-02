@@ -1,20 +1,26 @@
-import React from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
-import QuimicoList from '../components/QuimicoList';
+import { useState, useEffect } from 'react'
+import { supabase } from '../lib/supabase'
+import Auth from '../components/Auth'
+import Bodega from '../components/laBodega/Bodega'
+import { View } from 'react-native'
+import { Session } from '@supabase/supabase-js'
 
-const App = () => {
+export default function App() {
+  const [session, setSession] = useState<Session | null>(null)
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session)
+    })
+
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+    })
+  }, [])
+
   return (
-    <SafeAreaView style={styles.container}>
-      <QuimicoList />
-    </SafeAreaView>
-  );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-});
-
-export default App;
+    <View>
+      {session && session.user ? <Bodega key={session.user.id} session={session} /> : <Auth />}
+    </View>
+  )
+}

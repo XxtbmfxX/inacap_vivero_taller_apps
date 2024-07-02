@@ -6,19 +6,12 @@ import CardQuimicos from "../../components/cards_de_items/CardQuimicos";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Navegacion from "../../components/Navegacion";
 
+import {supabase} from '../../lib/supabase'
+
 const index = () => {
-  const [quimicos, setQuimicos] = useState([]);
+  const [químicos, setQuímicos] = useState([]);
 
-  const cargarQuimicos = async () => {
-    try {
-      const quimicosGuardadas = await AsyncStorage.getItem("quimicos");
-      const quimicos = quimicosGuardadas ? JSON.parse(quimicosGuardadas) : [];
-      setQuimicos(quimicos);
-    } catch (error) {
-      console.error("Error al cargar las quimicos:", error);
-    }
-  };
-
+ 
   const eliminarQuimicos = (idQuimico) => {
     try {
       const nuevosQuimicos = [...quimicos];
@@ -35,12 +28,27 @@ const index = () => {
     }
   };
 
+  
+  const getItems = async () => {
+    let { data, error } = await supabase.from("quimico").select("*");
+    console.log(data, error);
+    setQuímicos(data);
+  };
+
+
+
   useEffect(() => {
-    cargarQuimicos();
+    getItems()
   }, []);
+
+
+
+
+  
 
   return (
     <ScrollView contentContainerStyle={{ alignItems: "center" }}>
+     
       <Text
         style={{
           fontSize: 30,
@@ -55,18 +63,19 @@ const index = () => {
         screen={"/quimicos/add_quimicos"}
       />
 
-      {quimicos.length > 0 ? (
-        quimicos.map((quimico, indice) => (
+
+      {químicos.length > 0 ? (
+        químicos.map((quimico, indice) => (
           <CardQuimicos
-            fechaIngreso={quimico.fechaIngreso}
+            fechaIngreso={quimico.fecha_ingreso}
             cantidad={quimico.cantidad}
             contenido={quimico.contenido}
             necesidadesltkg={quimico.necesidadesltkg}
             categoria={quimico.categoria}
             presentacion={quimico.presentacion}
             stockMinimo={quimico.stockMinimo}
+            nombreQuimico={quimico.nombre_quimico}
             key={indice}
-            eliminarQuimicos={eliminarQuimicos}
           />
         ))
       ) : (

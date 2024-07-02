@@ -2,7 +2,7 @@ import React from "react";
 import { Card, Button } from "@rneui/base";
 import { Link } from "expo-router";
 
-const ItemsCard = ({ titulo = "Semillas", screen = "/semillas" }) => {
+const ItemsCard = ({ titulo = "Semillas", screen = "/index" }) => {
   return (
     <Link
       href={screen}

@@ -11,15 +11,16 @@ const CardQuimicos = ({
   presentacion,
   stockMinimo,
   stock,
-  eliminarQuimicos
+  nombre,
 }) => {
   return (
     <>
       <Card.Divider />
       <View style={styles.cardContainer}>
-          <Text onPress={eliminarQuimicos(1)} style={styles.contenido}>X Eliminar X</Text>
+          
         <View style={styles.header}>
           <Text style={styles.contenido}>Contenido: {contenido}</Text>
+          <Text style={styles.contenido}>Nombre: {nombre}</Text>
         </View>
         <Text style={styles.fechaIngreso}>Fecha Ingreso: {fechaIngreso}</Text>
         <View style={styles.categoryPresentation}>

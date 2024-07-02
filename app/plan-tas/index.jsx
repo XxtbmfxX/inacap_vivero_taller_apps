@@ -4,36 +4,38 @@ import React, { useEffect, useState } from "react";
 import Navegacion  from "../../components/Navegacion";
 
 import CardPlantas  from "../../components/cards_de_items/CardPlantas";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { convertToObject } from "typescript";
 
+
+import {supabase} from '../../lib/supabase'
 
 
 const index = () => {
 
-  const [plantas, setPlantas] = useState([])
+  const [plantas, setPlantas] = useState([]);
+
+  //Se cambió la función para usar supabase en vez de el AsyncStorage
+    const getItems = async () => {
+      let { data} = await supabase.from("planta").select("*");
+      setPlantas(data);
+    };
   
-
-
-  
-  const cargarPlantas = async () => {
-    try {
-      const plantasGuardadas = await AsyncStorage.getItem('plantas');
-      const plantas = plantasGuardadas ? JSON.parse(plantasGuardadas) : [];
-      setPlantas(plantas);
-    } catch (error) {
-      console.error('Error al cargar las plantas:', error);
-    }
-  };
-
-  useEffect(() => {
-    cargarPlantas();
-  }, []);
+    useEffect(() => {
+      getItems()
+    }, []);
 
 
 
   return (
     <ScrollView contentContainerStyle={{ alignItems: "center" }}>
+       <Text
+        style={{
+          fontSize: 30,
+          marginHorizontal: "auto",
+          marginVertical: 30,
+        }}
+      >
+        Plantas
+      </Text>
    <Navegacion titulo={"Agregar Planta"} screen={"/plan-tas/add_planta"} />
 
       { 

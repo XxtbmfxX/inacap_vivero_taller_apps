@@ -1,59 +1,29 @@
 import { ScrollView, Text } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import CardDespacho from '../../components/cards_de_items/CardDespacho'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-
-const db = [
-  {
-    cantidadPlantas: 50,
-    fechaRetiro: '2024-06-01',
-    fechaSolicitud: '2024-05-25',
-    numSemillas: 200,
-    numeroGuia: 'AB123456',
-    pedido: 'Pedido001'
-  },
-  {
-    cantidadPlantas: 30,
-    fechaRetiro: '2024-06-05',
-    fechaSolicitud: '2024-05-28',
-    numSemillas: 100,
-    numeroGuia: 'CD789012',
-    pedido: 'Pedido002'
-  },
-  {
-    cantidadPlantas: 75,
-    fechaRetiro: '2024-06-10',
-    fechaSolicitud: '2024-06-01',
-    numSemillas: 300,
-    numeroGuia: 'EF345678',
-    pedido: 'Pedido003'
-  },
-  {
-    cantidadPlantas: 40,
-    fechaRetiro: '2024-06-15',
-    fechaSolicitud: '2024-06-05',
-    numSemillas: 150,
-    numeroGuia: 'GH901234',
-    pedido: 'Pedido004'
-  },
-  {
-    cantidadPlantas: 60,
-    fechaRetiro: '2024-06-20',
-    fechaSolicitud: '2024-06-10',
-    numSemillas: 250,
-    numeroGuia: 'IJ567890',
-    pedido: 'Pedido005'
-  }
-]
+import Navegacion from '../../components/Navegacion'
+import {supabase} from '../../lib/supabase'
 
 const index = () => {
 
- 
+  const [despachos, setDespachos] = useState([]);
+
+//Se cambió la función para usar supabase en vez de el AsyncStorage
+  const getItems = async () => {
+    let { data} = await supabase.from("despacho").select("*");
+    console.log(data)
+    setDespachos(data);
+  };
+
+  useEffect(() => {
+    getItems()
+  }, []);
 
 
   return (
     <ScrollView contentContainerStyle={{alignItems: "center"}} >
+      
          <Text
         style={{
           fontSize: 30,
@@ -61,10 +31,14 @@ const index = () => {
           marginVertical: 30,
         }}
       >
-        Químicos
+        Despachos
       </Text>
+      <Navegacion
+        titulo={"agregar Despacho"}
+        screen={"/despachos/add_despacho"}
+      />
       {
-        db.map((despacho, indice) => (
+        despachos.map((despacho, indice) => (
           <CardDespacho 
             cantidadPlantas={despacho.cantidadPlantas}
             fechaRetiro={despacho.fechaRetiro}

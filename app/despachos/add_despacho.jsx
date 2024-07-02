@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 
@@ -19,6 +20,7 @@ const AgregarDespachoForm = () => {
     console.log('Especies:', especies);
     console.log('Número Semanas:', numeroSemanas);
     console.log('Observación:', observacion);
+    router.back()
   };
 
   return (

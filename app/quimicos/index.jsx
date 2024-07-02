@@ -3,52 +3,25 @@ import React, { useEffect, useState } from "react";
 
 import CardQuimicos from "../../components/cards_de_items/CardQuimicos";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import Navegacion from "../../components/Navegacion";
 
-import {supabase} from '../../lib/supabase'
+import { supabase } from "../../lib/supabase";
 
 const index = () => {
   const [químicos, setQuímicos] = useState([]);
 
- 
-  const eliminarQuimicos = (idQuimico) => {
-    try {
-      const nuevosQuimicos = [...quimicos];
-      //eliminar valor dado
-      const index = nuevosQuimicos.findIndex(
-        (quimico) => quimico.id === idQuimico
-      );
-      nuevosQuimicos.splice(index, 1);
-      console.log(nuevosQuimicos);
-
-      setQuimicos(nuevosQuimicos);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  
   const getItems = async () => {
     let { data, error } = await supabase.from("quimico").select("*");
     console.log(data, error);
     setQuímicos(data);
   };
 
-
-
   useEffect(() => {
-    getItems()
+    getItems();
   }, []);
-
-
-
-
-  
 
   return (
     <ScrollView contentContainerStyle={{ alignItems: "center" }}>
-     
       <Text
         style={{
           fontSize: 30,
@@ -62,7 +35,6 @@ const index = () => {
         titulo={"agregar químico"}
         screen={"/quimicos/add_quimicos"}
       />
-
 
       {químicos.length > 0 ? (
         químicos.map((quimico, indice) => (

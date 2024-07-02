@@ -1,29 +1,23 @@
-import { View, Text, ScrollView, ViewBase } from "react-native";
+import {  Text, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
 
 import Navegacion from "../../components/Navegacion";
-
 import CardPlatacion from "../../components/cards_de_items/CardPlantacion";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import {supabase} from '../../lib/supabase'
 
 const index = () => {
   const [plantacion, setPlantacion] = useState([]);
 
-  const cargarPlantaciones = async () => {
-    try {
-      const plantacionesGuardadas = await AsyncStorage.getItem("plantaciones");
-      const plantaciones = plantacionesGuardadas
-        ? JSON.parse(plantacionesGuardadas)
-        : [];
-      setPlantacion(plantaciones);
-    } catch (error) {
-      console.error("Error al cargar las plantaciones:", error);
-    }
-  };
-
-  useEffect(() => {
-    cargarPlantaciones();
-  }, []);
+  //Se cambió la función para usar supabase en vez de el AsyncStorage
+    const getItems = async () => {
+      let { data} = await supabase.from("plantacion").select("*");
+      setPlantacion(data);
+    };
+  
+    useEffect(() => {
+      getItems()
+    }, []);
+  
 
   return (
     <ScrollView>

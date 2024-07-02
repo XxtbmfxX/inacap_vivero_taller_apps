@@ -1,53 +1,73 @@
-import { ScrollView, Text, TouchableOpacity } from 'react-native';
-import React, { useState, useEffect } from 'react';
-import Navegacion from '../../components/Navegacion';
-import CardTareas from '../../components/cards_de_items/CardTareas';
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ScrollView, Text, TouchableOpacity } from "react-native";
+import React, { useState, useEffect } from "react";
+import Navegacion from "../../components/Navegacion";
+import CardTareas from "../../components/cards_de_items/CardTareas";
 import { useRouter } from 'expo-router';
 
-const Index = () => {
-  const [db, setDb] = useState([]);
+import { supabase } from "../../lib/supabase";
+
+const index = () => {
+  const [tareas, setTareas] = useState([]);
   const router = useRouter();
+  //Se cambió la función para usar supabase en vez de el AsyncStorage
+  const getItems = async () => {
+    let { data } = await supabase.from("tarea").select("*");
+    setTareas(data);
+  };
 
   useEffect(() => {
-    cargarTareas();
+    getItems();
   }, []);
-
-  const cargarTareas = async () => {
-    try {
-      const tareasGuardadas = await AsyncStorage.getItem("tareas");
-      if (tareasGuardadas) {
-        setDb(JSON.parse(tareasGuardadas));
-      }
-    } catch (error) {
-      console.error("Error al cargar las tareas:", error);
-    }
-  };
 
   const navegarAEditarTarea = (indice, nombreTarea, descripcionTarea) => {
     router.push({
-      pathname: '/tareas/update_tarea',
-      params: { indice, nombreTarea, descripcionTarea }
+      pathname: "/tareas/update_tarea",
+      params: { indice, nombreTarea, descripcionTarea },
     });
   };
 
   return (
     <ScrollView contentContainerStyle={{ alignItems: "center" }}>
-      <Text>Tareas</Text>
+      <Text
+        style={{
+          fontSize: 30,
+          marginHorizontal: "auto",
+          marginVertical: 30,
+        }}
+      >
+        Tareas
+      </Text>
       <Navegacion titulo={"agregar tareas"} screen={"/tareas/add_tarea"} />
-      {db.map((tarea, indice) => (
-        <TouchableOpacity
-          key={indice}
-          onPress={() => navegarAEditarTarea(indice, tarea.nombreTarea, tarea.descripcionTarea)}
-        >
-          <CardTareas ref={() => navegarAEditarTarea(indice, tarea.nombreTarea, tarea.descripcionTarea)} 
-            nombreTarea={tarea.nombreTarea}
-            descripción={tarea.descripcionTarea}
-          />
-        </TouchableOpacity>
-      ))}
+      {tareas.length > 0 ? (
+        tareas.map((tarea, indice) => (
+          <TouchableOpacity
+            key={indice}
+            onPress={() =>
+              navegarAEditarTarea(
+                indice,
+                tarea.nombre_tarea,
+                tarea.descripcion_tarea
+              )
+            }
+          >
+            <CardTareas
+              ref={() =>
+                navegarAEditarTarea(
+                  indice,
+                  tarea.nombre_tarea,
+                  tarea.descripcion_tarea
+                )
+              }
+              nombreTarea={tarea.nombre_tarea}
+              descripción={tarea.descripcion_tarea}
+            />
+          </TouchableOpacity>
+        ))
+      ) : (
+        <Text>No hay elementos ＞︿＜</Text>
+      )}
     </ScrollView>
   );
 };
 
-export default Index;
+export default index;

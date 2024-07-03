@@ -10,7 +10,7 @@ export const validarNombreQuimico = (nombre) => {
   return '';
 };
 
-export const validarDescripcionTarea = (descripcion) => {
+export const validarDescripcionQuimico = (descripcion) => {
   if (!descripcion || descripcion.trim().length === 0) {
     return 'La descripción del químico es obligatoria.';
   }
@@ -22,7 +22,7 @@ export const validarDescripcionTarea = (descripcion) => {
   return '';
 };
 
-export const validarFormularioTarea = (nombre, descripcion) => {
+export const validarFormularioQuimico = (nombre, descripcion) => {
   const errores = {};
 
   const errorNombre = validarNombreQuimico(nombre);

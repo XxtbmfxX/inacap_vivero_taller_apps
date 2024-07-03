@@ -66,7 +66,7 @@ const UpdateTarea = () => {
         await AsyncStorage.setItem("tareas", JSON.stringify(tareas));
         console.log("Tarea actualizada:", tareas[indice]);
         Alert.alert('Tarea actualizada', `La tarea "${nombre}" ha sido actualizada.`);
-        router.push('/tareas');
+        router.back();
       }
     } catch (error) {
       console.error("Error al actualizar la tarea:", error);

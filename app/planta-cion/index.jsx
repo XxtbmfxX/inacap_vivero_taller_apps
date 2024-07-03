@@ -20,7 +20,7 @@ const index = () => {
   
 
   return (
-    <ScrollView>
+    <ScrollView contentContainerStyle={{ alignItems: "center" }} >
       <Text
         style={{
           fontSize: 30,
@@ -38,10 +38,12 @@ const index = () => {
         {plantacion.length > 0 ? (
           plantacion.map((plantacion, indice) => (
             <CardPlatacion
-              fechaInicio={plantacion.fechaInicio}
-              fechaTermino={plantacion.fechaTermino}
-              numeroCosecha={plantacion.numeroCosecha}
+              fechaInicio={plantacion.fecha_inicio}
+              fechaCosecha={plantacion.fecha_cosecha}
+              numeroCosecha={plantacion.numero_cosecha}
               plantacion={plantacion.plantacion}
+              nombreColector={plantacion.nombre_colector}
+              especies={plantacion.especies}
               key={indice}
             />
           ))

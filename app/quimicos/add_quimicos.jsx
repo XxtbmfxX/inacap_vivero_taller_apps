@@ -38,7 +38,7 @@ const AgregarQuimicosForm = () => {
       quimicos.push(nuevoQuimico);
       await AsyncStorage.setItem("quimicos", JSON.stringify(quimicos));
 
-      router.push("/quimicos");
+      router.back();
     } catch (error) {
       console.error("Error al guardar el químico:", error);
     }

@@ -3,72 +3,49 @@ import React from "react";
 import { Card } from "@rneui/base";
 
 const CardSemillas = ({
-  despacho = "nombre",
+  codigoBolsa = "123",
   cantidad = "100",
-  fechaColecta = "2024",
-  fechaCosecha = "2024",
-  peso100Semillas = "500gr",
-  porcentajeGerminación = "20%",
-  códigoBolsa = "123",
-  condición = "nuevo",
-  procedencia = "Máfil",
+  fechaRecepcion = "2024-01-01",
+  fechaColecta = "2024-01-01",
+  porcentajeGerminacion = "20%",
+  pesoEnviado = "500gr",
+  pesoRecibido = "450gr",
+  condicionSemilla = "nuevo",
+  idEspecie = "E001",
+  idProcedencia = "P001",
+  idBodega = "B001",
+  rutColector = "12345678-9",
 }) => {
   return (
-    <Card containerStyle={{ padding: 0, borderRadius: 15, width: 300, }}>
-      <View
-        style={{
-          backgroundColor: "lightgray",
-          padding: 15,
-        }}
-      >
-        <View
-          style={{
-            display: "grid",
-            marginBottom: 10,
-          }}
-        >
+    <Card containerStyle={{ padding: 0, borderRadius: 15, width: 300 }}>
+      <View style={{ backgroundColor: "lightgray", padding: 15 }}>
+        <View style={{ marginBottom: 10 }}>
           <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-            Despacho: {despacho}
+            Código Bolsa: {codigoBolsa}
           </Text>
           <Text style={{ fontSize: 18 }}>Cantidad: {cantidad}</Text>
         </View>
-
-        <View
-          style={{
-            display: "grid",
-
-            marginBottom: 10,
-          }}
-        >
+        <View style={{ marginBottom: 10 }}>
+          <Text style={{ fontSize: 16 }}>Fecha Recepción: {fechaRecepcion}</Text>
           <Text style={{ fontSize: 16 }}>Fecha Colecta: {fechaColecta}</Text>
-          <Text style={{ fontSize: 16 }}>Fecha Cosecha: {fechaCosecha}</Text>
         </View>
-
-        <View
-          style={{
-            display: "grid",
-
-            marginBottom: 10,
-          }}
-        >
+        <View style={{ marginBottom: 10 }}>
           <Text style={{ fontSize: 16 }}>
-            Peso 100 Semillas: {peso100Semillas}
+            Peso Enviado: {pesoEnviado}
           </Text>
           <Text style={{ fontSize: 16 }}>
-            Germinación: {porcentajeGerminación}
+            Peso Recibido: {pesoRecibido}
+          </Text>
+          <Text style={{ fontSize: 16 }}>
+            Germinación: {porcentajeGerminacion}
           </Text>
         </View>
-
-        <View
-          style={{
-            display: "grid",
-
-            marginBottom: 10,
-          }}
-        >
-          <Text style={{ fontSize: 16 }}>Código Bolsa: {códigoBolsa}</Text>
-          <Text style={{ fontSize: 16 }}>Condición: {condición}</Text>
-          <Text style={{ fontSize: 16 }}>Procedencia: {procedencia}</Text>
+        <View style={{ marginBottom: 10 }}>
+          <Text style={{ fontSize: 16 }}>Condición: {condicionSemilla}</Text>
+          <Text style={{ fontSize: 16 }}>Especie: {idEspecie}</Text>
+          <Text style={{ fontSize: 16 }}>Procedencia: {idProcedencia}</Text>
+          <Text style={{ fontSize: 16 }}>Bodega: {idBodega}</Text>
+          <Text style={{ fontSize: 16 }}>Colector: {rutColector}</Text>
         </View>
       </View>
     </Card>

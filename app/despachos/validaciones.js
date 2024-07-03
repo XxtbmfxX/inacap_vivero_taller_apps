@@ -16,7 +16,7 @@ export const validarDescripcionDespacho = (descripcion) => {
   }
 
   if (descripcion.length < 10) {
-    return 'La descripción del depacho debe tener al menos 10 caracteres.';
+    return 'La descripción del despacho debe tener al menos 10 caracteres.';
   }
 
   return '';

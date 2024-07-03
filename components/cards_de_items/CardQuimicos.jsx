@@ -13,6 +13,10 @@ const CardQuimicos = ({
   stock,
   nombre,
 }) => {
+
+  const fecha = new Date(fechaIngreso);
+
+
   return (
     <>
       <Card.Divider />
@@ -22,7 +26,7 @@ const CardQuimicos = ({
           <Text style={styles.contenido}>Contenido: {contenido}</Text>
           <Text style={styles.contenido}>Nombre: {nombre}</Text>
         </View>
-        <Text style={styles.fechaIngreso}>Fecha Ingreso: {fechaIngreso}</Text>
+        <Text style={styles.fechaIngreso}>Fecha Ingreso: {fecha.toISOString().split('T')[0]}</Text>
         <View style={styles.categoryPresentation}>
           <Text style={styles.text}>Categoría: {categoria}</Text>
         </View>
@@ -30,10 +34,10 @@ const CardQuimicos = ({
         <View style={styles.details}>
           <Text style={styles.text}>Cantidad: {cantidad}</Text>
           <Text style={styles.text}>Stock Mínimo: {stockMinimo}</Text>
-          <Text style={styles.text}>Stock Actual: {stock}</Text>
+          {/* <Text style={styles.text}>Stock Actual: {stock}</Text> */}
         </View>
         <View style={styles.needs}>
-          <Text style={styles.text}>Necesidades: {necesidadesltkg}</Text>
+          {/* <Text style={styles.text}>Necesidades: {necesidadesltkg}</Text> */}
         </View>
       </View>
     </>
@@ -48,12 +52,13 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 15,
     marginBottom: 15,
+    gap: 10
   },
   header: {
-    flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "baseline",
-    marginBottom: 10,
+    marginBottom: 20,
+    gap: 20
   },
   contenido: {
     fontSize: 20,
@@ -61,24 +66,23 @@ const styles = StyleSheet.create({
   },
   fechaIngreso: {
     fontSize: 16,
-    fontWeight: "bold",
   },
   categoryPresentation: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 10,
+    
   },
   text: {
     fontSize: 16,
   },
   details: {
     justifyContent: "space-between",
-    marginBottom: 10,
+    
   },
   needs: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 10,
+    
   },
 });
 

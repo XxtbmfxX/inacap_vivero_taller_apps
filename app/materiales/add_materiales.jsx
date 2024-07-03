@@ -33,7 +33,7 @@ const IngresarMaterialesForm = () => {
       materiales.push(nuevoMaterial);
       await AsyncStorage.setItem("materiales", JSON.stringify(materiales));
 
-      router.push("/materiales");
+      router.back();
     } catch (error) {
       console.error("Error al guardar el químico:", error);
     }

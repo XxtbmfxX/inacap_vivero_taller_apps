@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Picker } from 'react-native';
 
-const AgregarPlantasForm = () => {
+const add_planta = () => {
 
 
 
@@ -37,7 +37,7 @@ const AgregarPlantasForm = () => {
       plantas.push(nuevaPlanta);
       await AsyncStorage.setItem("plantas", JSON.stringify(plantas));
 
-      router.push("/plan-tas");
+      router.back();
     } catch (error) {
       console.error("Error al guardar la Planta:", error);
     }
@@ -106,4 +106,4 @@ const styles = StyleSheet.create({
       
     },
   });
-export default AgregarPlantasForm;
+export default add_planta;

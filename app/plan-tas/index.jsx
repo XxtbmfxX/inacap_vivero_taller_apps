@@ -42,10 +42,14 @@ const index = () => {
       plantas.length > 0 ? 
       plantas.map((planta, indice) => (
         <CardPlantas
-          especie={planta.especie}
-          sector={planta.sector}
-          añoDespacho={planta.añoDespacho}
-          key={indice}
+          
+          key={planta.id_planta}
+          añoDespacho={planta.año_despacho}
+          numeroPlatabanda={planta.numero_platabanda}
+          idEspecie={planta.id_especie}
+          numeroCosecha={planta.numero_cosecha}
+          numeroSector={planta.numero_sector}
+
         />
       ))
       :

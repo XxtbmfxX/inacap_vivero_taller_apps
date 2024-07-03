@@ -35,7 +35,7 @@ const add_plantacion = () => {
       plantaciones.push(nuevaPlantacion);
       await AsyncStorage.setItem("plantaciones", JSON.stringify(plantaciones));
 
-      router.push("/planta-cion");
+      router.back();
     } catch (error) {
       console.error("Error al guardar la tarea:", error);
     }

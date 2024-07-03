@@ -16,35 +16,22 @@ const CardMaterial = ({
           position: "relative",
           alignItems: "left",
           backgroundColor: "lightgray",
-          width: 300,
-          borderTopLeftRadius: 15,
-          borderTopRightRadius: 15,
-          borderBottomLeftRadius: 15,
-          borderBottomRightRadius: 15,
-          marginBottom: 30
+          width: 350,
+          borderRadius: 15,
+          marginBottom: 30,
         }}
       >
         <View
           style={{
             flex: 1,
-            flexDirection: "row",
-            justifyContent: "center",
           }}
         >
-          <Card.Title style={{ fontSize: 17 }}>{nombreMaterial}</Card.Title>
+          <Card.Title style={{ fontSize: 30 }}>{nombreMaterial}</Card.Title>
         </View>
 
-        <View
-          style={{
-            flex: 10,
-            flexDirection: "row",
-            gap: 40,
-            margin: 15,
-          }}
-        >
-          <Text style={{ fontSize: 17 }}>
-            {cantidad}
-            {unidadDeMedida}
+        <View>
+          <Text style={{ fontSize: 30, margin: 20 }}>
+            {cantidad}-{unidadDeMedida}
           </Text>
         </View>
       </View>

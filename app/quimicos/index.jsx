@@ -12,7 +12,6 @@ const index = () => {
 
   const getItems = async () => {
     let { data, error } = await supabase.from("quimico").select("*");
-    console.log(data, error);
     setQuímicos(data);
   };
 
@@ -45,8 +44,8 @@ const index = () => {
             necesidadesltkg={quimico.necesidadesltkg}
             categoria={quimico.categoria}
             presentacion={quimico.presentacion}
-            stockMinimo={quimico.stockMinimo}
-            nombreQuimico={quimico.nombre_quimico}
+            stockMinimo={quimico.stock_minimo}
+            nombre={quimico.nombre}
             key={indice}
           />
         ))

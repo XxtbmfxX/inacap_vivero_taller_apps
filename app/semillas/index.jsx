@@ -39,17 +39,21 @@ const index = () => {
 
       {semillas.length > 0 ? semillas.map((semilla, indice) => (
         <Cardsemillas
-          despacho = {semilla.despacho}
-          cantidad = {semilla.cantidad}
-          fechaColecta = {semilla.fechaColecta}
-          fechaCosecha = {semilla.fechaCosecha}
-          peso100Semillas = {semilla.peso100Semillas}
-          porcentajeGerminación = {semilla.porcentajeGerminación}
-          códigoBolsa = {semilla.códigoBolsa}
-          condición = {semilla.condición}
-          procedencia = {semilla.procedencia}
-          key={indice}
-        />
+        key={indice}
+        codigoBolsa={semilla.codigo_bolsa}
+        cantidad={semilla.cantidad}
+        fechaRecepcion={semilla.fecha_recepcion}
+        fechaColecta={semilla.fecha_colecta}
+        porcentajeGerminacion={semilla.porcentaje_germinacion}
+        pesoEnviado={semilla.peso_enviado}
+        pesoRecibido={semilla.peso_recibido}
+        condicionSemilla={semilla.condicion_semilla}
+        idEspecie={semilla.id_especie}
+        idProcedencia={semilla.id_procedencia}
+        idBodega={semilla.id_bodega}
+        rutColector={semilla.rut_colector}
+      />
+      
       )):
         <Text>
           No hay elementos ＞︿＜

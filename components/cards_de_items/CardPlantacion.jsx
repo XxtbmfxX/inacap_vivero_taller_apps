@@ -5,9 +5,10 @@ import { Card } from "@rneui/base";
 const CardPlantacion = ({
   plantacion = "titulo plantación",
   fechaInicio = "2024-07",
-  fechaTermino = "2025",
+  fechaCosecha = "2025",
   especies = ["especie1", "especie2", "especie3"],
   numeroCosecha = 420,
+  nombreColector = "Juan"
 }) => {
   return (
     <>
@@ -16,14 +17,14 @@ const CardPlantacion = ({
         <View style={styles.header}>
           <Card.Title style={styles.title}>Plantación: {plantacion}</Card.Title>
           <Text style={styles.text}>Fecha Inicio: {fechaInicio}</Text>
-          <Text style={styles.text}>Fecha Termino: {fechaTermino}</Text>
+          <Text style={styles.text}>Fecha Termino: {fechaCosecha}</Text>
         </View>
         <Text style={styles.subtitle}>Especies</Text>
         <View style={styles.especiesContainer}>
-          {especies.map((especie, index) => (
-            <Text key={index} style={styles.especieText}>{especie}</Text>
-          ))}
+          <Text style={styles.especieText}>{especies}</Text>
+
         </View>
+        <Text style={styles.text}>Número Cosecha: {nombreColector}</Text>
         <Text style={styles.text}>Número Cosecha: {numeroCosecha}</Text>
       </View>
     </>
@@ -36,6 +37,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'lightgray',
     borderRadius: 15,
     padding: 10,
+    width: 350,
     justifyContent: 'space-between'
   },
   header: {

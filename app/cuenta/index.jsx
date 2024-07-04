@@ -2,13 +2,19 @@ import { useState, useEffect } from "react";
 import { supabase } from "../../lib/supabase";
 import { StyleSheet, View, Alert } from "react-native";
 import { Button, Input } from "@rneui/themed";
-import { Session } from "@supabase/supabase-js";
+import { useAuth } from '../../context/AuthContext';
 
-export default function Account({ session }) {
-  const [loading, setLoading] = useState(true);
+export default function Account() {
+  const [loading, setLoading] = useState(false);
+
+  const { session, manageLogout } = useAuth();
+
+
   const [username, setUsername] = useState("");
   const [website, setWebsite] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
+  
+
 
   useEffect(() => {
     if (session) getProfile();
@@ -20,7 +26,7 @@ export default function Account({ session }) {
       if (!session?.user) throw new Error("No user on the session!");
 
       const { data, error, status } = await supabase
-        .from("profiles")
+        .from("usuario")
         .select(`username, website, avatar_url`)
         .eq("id", session?.user.id)
         .single();
@@ -55,7 +61,7 @@ export default function Account({ session }) {
         updated_at: new Date(),
       };
 
-      const { error } = await supabase.from("profiles").upsert(updates);
+      const { error } = await supabase.from("usuario").upsert(updates);
 
       if (error) {
         throw error;
@@ -76,14 +82,14 @@ export default function Account({ session }) {
       </View>
       <View style={styles.verticallySpaced}>
         <Input
-          label="Username"
+          label="Nombre de usuario"
           value={username || ""}
           onChangeText={(text) => setUsername(text)}
         />
       </View>
       <View style={styles.verticallySpaced}>
         <Input
-          label="Website"
+          label="Página web"
           value={website || ""}
           onChangeText={(text) => setWebsite(text)}
         />
@@ -91,7 +97,7 @@ export default function Account({ session }) {
 
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Button
-          title={loading ? "Loading ..." : "Update"}
+          title={loading ? "Cargando ..." : "Actualizar"}
           onPress={() =>
             updateProfile({ username, website, avatar_url: avatarUrl })
           }
@@ -100,7 +106,7 @@ export default function Account({ session }) {
       </View>
 
       <View style={styles.verticallySpaced}>
-        <Button title="Sign Out" onPress={() => supabase.auth.signOut()} />
+        <Button title="Cerrar Sesión" onPress={manageLogout} />
       </View>
     </View>
   );

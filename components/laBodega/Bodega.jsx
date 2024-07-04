@@ -7,8 +7,7 @@ import { Button } from "@rneui/base";
 
 
 
-const index = ({session}) => {
-
+const index = () => {
   return (
     <View style={styles.container}>
         

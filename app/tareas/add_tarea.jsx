@@ -10,43 +10,52 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useRouter } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { validarFormularioTarea } from "./validaciones";
+import { supabase } from "../../lib/supabase";
 
 const AddTarea = () => {
-  const [errores, setErrores] = useState({});
-  const [tarea, setTarea] = useState({
-    nombreTarea: "",
-    descripcionTarea: "",
-  });
+  const [nombreTarea, setNombreTarea] = useState('');
+  const [descripcionTarea, setDescripcion] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
+  const [errores, setErrores] = useState({});
   const router = useRouter();
 
-  const handleSubmit = () => {
-    const erroresValidacion = validarFormularioTarea(
-      tarea.nombreTarea,
-      tarea.descripcionTarea
-    );
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    const erroresValidacion = validarFormularioTarea(nombreTarea, descripcionTarea);
     if (Object.keys(erroresValidacion).length > 0) {
       setErrores(erroresValidacion);
       return;
     }
-    setModalVisible(true);
-  };
-
-  const confirmarGuardar = async () => {
-    const nuevaTarea = { ...tarea };
-    try {
-      const tareasGuardadas = await AsyncStorage.getItem("tareas");
-      const tareas = tareasGuardadas ? JSON.parse(tareasGuardadas) : [];
-      tareas.push(nuevaTarea);
-      await AsyncStorage.setItem("tareas", JSON.stringify(tareas));
-      setModalVisible(false);
-      router.push("/tareas");
-    } catch (error) {
-      console.error("Error al guardar la tarea:", error);
+  
+    setErrores({});
+  
+    const { data, error } = await supabase
+      .from('tarea')
+      .insert([
+        { 
+          nombre_tarea: nombreTarea,
+          descripcion_tarea: descripcionTarea
+        }
+      ])
+      .select(); 
+  
+    if (error) {
+      console.error('Error al añadir tarea:', error);
+      setErrores({ general: 'Error al añadir la tarea. Por favor, inténtalo de nuevo.' });
+    } else {
+      console.log('Tarea añadida:', data);
+      setModalVisible(true);
+      setNombreTarea('');
+      setDescripcion('');
     }
   };
+  const confirmarGuardar = async () => {
+    setModalVisible(false);
+    router.push("/tareas");
+  };
+
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -54,14 +63,9 @@ const AddTarea = () => {
         <Text style={styles.title}>Agregar Tareas</Text>
         <TextInput
           style={styles.input}
-          placeholder="Nombre de Tarea"
-          value={tarea.nombreTarea}
-          onChangeText={(text) =>
-            setTarea((prevState) => ({
-              ...prevState,
-              nombreTarea: text,
-            }))
-          }
+          placeholder="Nombre de la tarea"
+          value={nombreTarea}
+          onChangeText={setNombreTarea}
         />
         {errores.nombre && (
           <Text style={styles.errorText}>{errores.nombre}</Text>
@@ -69,17 +73,12 @@ const AddTarea = () => {
         <TextInput
           style={[styles.input, { height: 100 }]}
           placeholder="Descripción de Tarea"
-          multiline
-          value={tarea.descripcionTarea}
-          onChangeText={(text) =>
-            setTarea((prevState) => ({
-              ...prevState,
-              descripcionTarea: text,
-            }))
-          }
+          value={descripcionTarea}
+          onChangeText={setDescripcion}
+          multiline={true}
         />
-        {errores.descripcion && (
-          <Text style={styles.errorText}>{errores.descripcion}</Text>
+        {errores.general && (
+          <Text style={styles.errorText}>{errores.general}</Text>
         )}
         <Button title="Guardar" onPress={handleSubmit} />
 
@@ -146,6 +145,11 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    marginBottom: 10,
   },
 });
 

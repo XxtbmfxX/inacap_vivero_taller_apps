@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from "react-native";
 import React from "react";
-import { Card } from "@rneui/base";
+import { Button, Card } from "@rneui/base";
 
 const CardPlantacion = ({
   plantacion = "titulo plantación",
@@ -8,14 +8,22 @@ const CardPlantacion = ({
   fechaCosecha = "2025",
   especies = ["especie1", "especie2", "especie3"],
   numeroCosecha = 420,
-  nombreColector = "Juan"
+  nombreColector = "Juan",
+  openModal,
 }) => {
   return (
     <>
       <Card.Divider />
       <View style={styles.cardContainer}>
+      <Button
+          buttonStyle={{ backgroundColor: "red" }}
+          onPress={() => openModal({id: numeroCosecha})}
+        >
+          Eliminar
+        </Button>
         <View style={styles.header}>
           <Card.Title style={styles.title}>Plantación: {plantacion}</Card.Title>
+          <Text style={styles.text}>id: {numeroCosecha}</Text>
           <Text style={styles.text}>Fecha Inicio: {fechaInicio}</Text>
           <Text style={styles.text}>Fecha Termino: {fechaCosecha}</Text>
         </View>

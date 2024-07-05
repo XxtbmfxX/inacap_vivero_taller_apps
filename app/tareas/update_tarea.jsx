@@ -1,105 +1,105 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ScrollView, Alert, Modal, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, Text, TextInput, Button, StyleSheet, ScrollView, Alert, Modal, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { validarFormularioTarea } from "./validaciones";
+import supabase from '../../lib/supabase'; // Asegúrate de que la ruta sea correcta
 
 const UpdateTarea = () => {
   const router = useRouter();
   const params = useLocalSearchParams();
-  const [nombre, setNombre] = useState('');
-  const [desc, setDesc] = useState('');
-  const [indice, setIndice] = useState(-1);
+
+  console.log('params:', params); // Verifica que params.id esté correcto
+
+  const [tarea, setTarea] = useState({
+    nombre_tarea: '',
+    descripcion_tarea: '',
+  });
   const [errores, setErrores] = useState({});
   const [modalVisible, setModalVisible] = useState(false);
-
-  const cargarDatosTarea = useCallback(async () => {
-    if (params.indice) {
-      const indiceT = parseInt(params.indice);
-      setIndice(indiceT);
-      try {
-        const tareasGuardadas = await AsyncStorage.getItem("tareas");
-        if (tareasGuardadas) {
-          const tareas = JSON.parse(tareasGuardadas);
-          if (indiceT >= 0 && indiceT < tareas.length) {
-            const tarea = tareas[indiceT];
-            setNombre(tarea.nombreTarea);
-            setDesc(tarea.descripcionTarea);
-          }
-        }
-      } catch (error) {
-        console.error("Error al cargar la tarea:", error);
-      }
-    }
-  }, [params.indice]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    cargarDatosTarea();
-  }, [cargarDatosTarea]);
+    // Cargar datos de params
+    if (params.nombreTarea && params.descripcionTarea) {
+      setTarea({
+        nombre_tarea: params.nombreTarea,
+        descripcion_tarea: params.descripcionTarea,
+      });
+      setIsLoading(false);
+    }
+  }, []); // Usamos un array vacío para que este efecto se ejecute solo una vez al montar el componente
 
-  const handleNombreChange = useCallback((text) => {
-    console.log("Nombre cambiado a:", text);
-    setNombre(text);
-  }, []);
+  const handleInputChange = (name, value) => {
+    setTarea(prevTarea => ({
+      ...prevTarea,
+      [name]: value
+    }));
+  };
 
-  const handleDescChange = useCallback((text) => {
-    console.log("Descripción cambiada a:", text);
-    setDesc(text);
-  }, []);
-
-  const handleUpdate = useCallback(() => {
-    console.log("Actualizando tarea. Nombre:", nombre, "Descripción:", desc);
-    const erroresValidacion = validarFormularioTarea(nombre, desc);
+  const handleUpdate = async () => {
+    // Validar el formulario (agregar tu lógica de validación aquí)
+    const erroresValidacion = validarFormularioTarea(tarea.nombre_tarea, tarea.descripcion_tarea);
     if (Object.keys(erroresValidacion).length > 0) {
       setErrores(erroresValidacion);
       return;
     }
+
     setModalVisible(true);
-  }, [nombre, desc]);
+  };
 
   const confirmarActualizacion = useCallback(async () => {
     try {
-      const tareasGuardadas = await AsyncStorage.getItem("tareas");
-      let tareas = tareasGuardadas ? JSON.parse(tareasGuardadas) : [];
-      if (indice >= 0 && indice < tareas.length) {
-        tareas[indice] = { nombreTarea: nombre, descripcionTarea: desc };
-        await AsyncStorage.setItem("tareas", JSON.stringify(tareas));
-        console.log("Tarea actualizada:", tareas[indice]);
-        Alert.alert('Tarea actualizada', `La tarea "${nombre}" ha sido actualizada.`);
-        router.back();
-      }
+      const { error } = await supabase
+        .from('tarea')
+        .update({ 
+          nombre_tarea: tarea.nombre_tarea, 
+          descripcion_tarea: tarea.descripcion_tarea 
+        })
+        .eq('id_tarea', params.id);
+
+      if (error) throw error;
+
+      Alert.alert('Tarea actualizada', `La tarea "${tarea.nombre_tarea}" ha sido actualizada.`);
+      router.back();
     } catch (error) {
       console.error("Error al actualizar la tarea:", error);
+      Alert.alert('Error', 'No se pudo actualizar la tarea');
+    } finally {
+      setModalVisible(false);
     }
-  }, [indice, nombre, desc, router]);
+  }, [tarea, params.id, router]);
 
-  const memoizedContent = useMemo(() => (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
+  if (isLoading) {
+    return (
       <View style={styles.container}>
-        <Text style={styles.title}>Actualizar Tarea</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Nombre de Tarea"
-          value={nombre}
-          onChangeText={handleNombreChange}
-        />
-        {errores.nombre && <Text style={styles.errorText}>{errores.nombre}</Text>}
-        <TextInput
-          style={[styles.input, { height: 100 }]}
-          placeholder="Descripción de Tarea"
-          multiline
-          value={desc}
-          onChangeText={handleDescChange}
-        />
-        {errores.descripcion && <Text style={styles.errorText}>{errores.descripcion}</Text>}
-        <Button title="Guardar" onPress={handleUpdate} />
+        <ActivityIndicator size="large" color="#0000ff" />
       </View>
-    </ScrollView>
-  ), [nombre, desc, errores, handleNombreChange, handleDescChange, handleUpdate]);
+    );
+  }
 
   return (
     <>
-      {memoizedContent}
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.container}>
+          <Text style={styles.title}>Actualizar Tarea</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Nombre de Tarea"
+            value={tarea.nombre_tarea}
+            onChangeText={(text) => handleInputChange('nombre_tarea', text)}
+          />
+          {errores.nombre_tarea && <Text style={styles.errorText}>{errores.nombre_tarea}</Text>}
+          <TextInput
+            style={[styles.input, { height: 100 }]}
+            placeholder="Descripción de Tarea"
+            multiline
+            value={tarea.descripcion_tarea}
+            onChangeText={(text) => handleInputChange('descripcion_tarea', text)}
+          />
+          {errores.descripcion_tarea && <Text style={styles.errorText}>{errores.descripcion_tarea}</Text>}
+          <Button title="Guardar" onPress={handleUpdate} />
+        </View>
+      </ScrollView>
       <Modal
         animationType="slide"
         transparent={true}
@@ -129,6 +129,7 @@ const UpdateTarea = () => {
     </>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -151,6 +152,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: '#D5DBDB',
   },
+  errorText: {
+    color: 'red',
+  },
   button: {
     backgroundColor: '#f3f3f3',
     padding: 10,
@@ -161,13 +165,48 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 16,
-    
   },
   centeredView: {
-    backgroundColor: "white",
-    height: 500
-  }
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  buttonCancel: {
+    backgroundColor: '#ff0000',
+    marginRight: 10,
+  },
+  buttonConfirm: {
+    backgroundColor: '#00ff00',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
 });
-
 
 export default UpdateTarea;

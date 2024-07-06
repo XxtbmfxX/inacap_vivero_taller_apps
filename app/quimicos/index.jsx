@@ -13,25 +13,20 @@ const index = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedQuimico, setSelectedQuimico] = useState(null);
 
-
   const handleDelete = async () => {
-  
     if (selectedQuimico) {
- 
-    const { error } = await supabase
-    .from('quimico')
-    .delete()
-    .eq('id', selectedQuimico.id)
-            
+      const { error } = await supabase
+        .from('quimico')
+        .delete()
+        .eq('id', selectedQuimico.id);
+      
       if (error === null) {
         setQuímicos(químicos.filter(químico => químico.id !== selectedQuimico.id));
       }
 
-
       setModalVisible(false);
       setSelectedQuimico(null);
     }
-
   };
 
   const openModal = (item) => {
@@ -40,13 +35,9 @@ const index = () => {
   };
 
   const getItems = async () => {
-    if(químicos.length === 0) {
-      let { data } = await supabase.from("quimico").select("*");
-      setQuímicos(data);
-    } 
-    
+    let { data } = await supabase.from("quimico").select("*").order('fecha_ingreso')
+    setQuímicos(data);
   };
-
 
   useEffect(() => {
     getItems();
@@ -69,13 +60,11 @@ const index = () => {
       />
 
       {químicos.length > 0 ? (
-
         químicos.map((quimico) => (
           <CardQuimicos
             fechaIngreso={quimico.fecha_ingreso}
             cantidad={quimico.cantidad}
             contenido={quimico.contenido}
-            necesidadesltkg={quimico.necesidadesltkg}
             categoria={quimico.categoria}
             presentacion={quimico.presentacion}
             stockMinimo={quimico.stock_minimo}
@@ -83,14 +72,13 @@ const index = () => {
             id={quimico.id}
             openModal={openModal}
             key={quimico.id}
+            onUpdate={getItems}
           />
         ))
-     
-      
       ) : (
         <Text>No hay químicos unu</Text>
       )}
-         <ModalConfirmarDelete
+      <ModalConfirmarDelete
         visible={modalVisible}
         onConfirm={handleDelete}
         onCancel={() => setModalVisible(false)}

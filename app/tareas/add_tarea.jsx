@@ -20,17 +20,15 @@ const AddTarea = () => {
   const [errores, setErrores] = useState({});
   const router = useRouter();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
+  const handleSubmit = async () => {
     const erroresValidacion = validarFormularioTarea(nombreTarea, descripcionTarea);
     if (Object.keys(erroresValidacion).length > 0) {
       setErrores(erroresValidacion);
       return;
     }
-  
+
     setErrores({});
-  
+
     const { data, error } = await supabase
       .from('tarea')
       .insert([
@@ -39,23 +37,23 @@ const AddTarea = () => {
           descripcion_tarea: descripcionTarea
         }
       ])
-      .select(); 
-  
+      .select();
+
     if (error) {
       console.error('Error al añadir tarea:', error);
       setErrores({ general: 'Error al añadir la tarea. Por favor, inténtalo de nuevo.' });
     } else {
       console.log('Tarea añadida:', data);
       setModalVisible(true);
-      setNombreTarea('');
-      setDescripcion('');
     }
   };
-  const confirmarGuardar = async () => {
-    setModalVisible(false);
-    router.push("/tareas");
-  };
 
+  const confirmarGuardar = () => {
+    setModalVisible(false);
+    setNombreTarea('');
+    setDescripcion('');
+    router.back();
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -77,6 +75,9 @@ const AddTarea = () => {
           onChangeText={setDescripcion}
           multiline={true}
         />
+        {errores.descripcion && (
+          <Text style={styles.errorText}>{errores.descripcion}</Text>
+        )}
         {errores.general && (
           <Text style={styles.errorText}>{errores.general}</Text>
         )}
@@ -112,7 +113,30 @@ const AddTarea = () => {
     </ScrollView>
   );
 };
+
 const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    gap: 20,
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -139,12 +163,11 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: 'center',
     marginTop: 10,
-    borderRadius:10,
+    borderRadius: 10,
   },
   buttonText: {
     color: '#fff',
     fontSize: 16,
-    
   },
   errorText: {
     color: 'red',

@@ -3,35 +3,28 @@ import React, { useEffect, useState } from "react";
 
 import ModalConfirmarDelete from "../../components/ModalConfirmarDelete";
 import Navegacion from "../../components/Navegacion";
-import CardPlatacion from "../../components/cards_de_items/CardPlantacion";
+import CardPlantacion from "../../components/cards_de_items/CardPlantacion";
 import { supabase } from "../../lib/supabase";
 
 const index = () => {
   const [plantacion, setPlantacion] = useState([]);
-
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedPlantacion, setSelectedPlantacion] = useState(null);
 
   const handleDelete = async () => {
-    if (selectedPlantacion) {
-
-      const { a } = await supabase
-        .from("plantacion")
-        .select()
-        .eq("numero_cosecha", selectedPlantacion.id.toString());
-
-
-      console.log(selectedPlantacion.id, a)
-
-
+    if (selectedPlantacion !== null) {
       const { error } = await supabase
         .from("plantacion")
         .delete()
-        .eq("numero_cosecha", selectedPlantacion.id.toString());
+        .eq("numero_cosecha", selectedPlantacion);
+
+      console.log(error);
 
       if (error === null) {
-        setQuímicos(
-          químicos.filter((químico) => químico.numero_cosecha !== selectedPlantacion.id)
+        setPlantacion(
+          plantacion.filter(
+            (plantaCion) => plantaCion.numero_cosecha !== selectedPlantacion
+          )
         );
       }
 
@@ -40,12 +33,11 @@ const index = () => {
     }
   };
 
-  const openModal = (item) => {
-    setSelectedPlantacion(item);
+  const openModal = (id) => {
+    setSelectedPlantacion(id);
     setModalVisible(true);
   };
 
-  //Se cambió la función para usar supabase en vez de el AsyncStorage
   const getItems = async () => {
     let { data } = await supabase.from("plantacion").select("*");
     setPlantacion(data);
@@ -73,15 +65,17 @@ const index = () => {
       />
       {plantacion.length > 0 ? (
         plantacion.map((plantacion) => (
-          <CardPlatacion
+          <CardPlantacion
             fechaInicio={plantacion.fecha_inicio}
             fechaCosecha={plantacion.fecha_cosecha}
             numeroCosecha={plantacion.numero_cosecha}
             plantacion={plantacion.plantacion}
             nombreColector={plantacion.nombre_colector}
             especies={plantacion.especies}
+            otrasEspecies={plantacion.otras_especies}
             openModal={openModal}
             key={plantacion.numero_cosecha}
+            onUpdate={getItems}  // Pasamos la función getItems para refrescar la lista
           />
         ))
       ) : (

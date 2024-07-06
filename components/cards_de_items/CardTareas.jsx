@@ -1,21 +1,59 @@
-import { View, Text, TouchableOpacity } from "react-native";
-import React, { forwardRef } from "react";
-import { Card } from "@rneui/base";
-import UpdateTarea from "../../app/tareas/update_tarea";
+import { Text, TextInput, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import { Button, Card } from "@rneui/base";
+import { supabase } from "../../lib/supabase";
 
-const CardTareas = forwardRef(({ nombreTarea = "Nombre de la Tarea", descripción = "Descripción de la Tarea" }, ref) => {
+const CardTareas = ({ nombreTarea, descripción, idTarea, onUpdate }) => {
+  const [editMode, setEditMode] = useState(false);
+  const [newNombreTarea, setNewNombreTarea] = useState(nombreTarea);
+  const [newDescripcion, setNewDescripcion] = useState(descripción);
+
+  const handleUpdate = async () => {
+    const { error } = await supabase
+      .from('tarea')
+      .update({ nombre_tarea: newNombreTarea, descripcion_tarea: newDescripcion })
+      .eq('id_tarea', idTarea);
+
+    if (!error) {
+      onUpdate(); // Para refrescar la lista de tareas
+      setEditMode(false);
+    } else {
+      console.log(error.message);
+    }
+  };
+
   return (
-    <TouchableOpacity onPress={ref}>
-      <Card containerStyle={styles.cardContainer}>
-        <Card.Title style={styles.cardTitle}>{nombreTarea}</Card.Title>
-        <Card.Divider />
-        <Text style={styles.cardDescription}>{descripción}</Text>
-      </Card>
-    </TouchableOpacity>
+    <Card containerStyle={styles.cardContainer}>
+      {editMode ? (
+        <>
+          <TextInput
+            style={styles.input}
+            value={newNombreTarea}
+            onChangeText={setNewNombreTarea}
+            placeholder="Nombre de la Tarea"
+          />
+          <TextInput
+            style={styles.input}
+            value={newDescripcion}
+            onChangeText={setNewDescripcion}
+            placeholder="Descripción"
+          />
+          <Button title="Guardar" onPress={handleUpdate} />
+          <Button title="Cancelar" onPress={() => setEditMode(false)} />
+        </>
+      ) : (
+        <>
+          <Card.Title style={styles.cardTitle}>{nombreTarea}</Card.Title>
+          <Card.Divider />
+          <Text style={styles.cardDescription}>Id:{idTarea} {descripción}</Text>
+          <Button title="Actualizar"  buttonStyle={{marginTop: 20}} onPress={() => setEditMode(true)} />
+        </>
+      )}
+    </Card>
   );
-});
+};
 
-const styles = {
+const styles = StyleSheet.create({
   cardContainer: {
     borderRadius: 10,
     padding: 15,
@@ -33,6 +71,14 @@ const styles = {
     fontSize: 16,
     color: "#666",
   },
-};
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+  },
+});
 
 export default CardTareas;

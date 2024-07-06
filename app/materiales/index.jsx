@@ -8,6 +8,30 @@ import { supabase } from "../../lib/supabase";
 
 const index = () => {
   const [materiales, setMateriales] = useState([]);
+  const [materialSeleccionado, setMaterialSeleccionado] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleDelete = async () => {
+
+    if (materialSeleccionado !== null) {
+      const { error } = await supabase
+       .from("material")
+       .delete()
+       .eq("id_material", materialSeleccionado);
+      if (error == null) {
+        setMateriales(materiales.filter((material) => material.id_material!== materialSeleccionado));
+      }
+
+      setModalVisible(false);
+      setMaterialSeleccionado(null);
+
+    }
+  };
+
+  const openModal = (id) => {
+    setMaterialSeleccionado(id);
+    setModalVisible(true);
+  };
 
 //Se cambió la función para usar supabase en vez de el AsyncStorage
   const getItems = async () => {
@@ -41,6 +65,7 @@ const index = () => {
             unidadDeMedida={material.unidad_de_medida}
             cantidad={material.cantidad}
             key={indice}
+            openModal={openModal}
           />
         ))
       ) : (
@@ -48,6 +73,13 @@ const index = () => {
           No hay materiales u.u
         </Text>
       )}
+
+      <ModalConfirmarDelete
+        visible={modalVisible}
+        onConfirm={handleDelete}
+        onCancel={() => setModalVisible(false)}
+      />
+      
     </ScrollView>
   );
 };

@@ -1,28 +1,36 @@
 // views/CardDespacho.js
 import { View, Text, StyleSheet } from "react-native";
 import React from "react";
-import { Card } from "@rneui/base";
+import { Card,Button } from "@rneui/base";
 import { formatDate } from "../../lib/utils";
 
 const CardDespacho = ({
-  numeroGuiaDespacho = "N/A",
-  observaciones = "N/A",
-  numeroDeSemanas = "N/A",
-  predio = "N/A",
-  cantidadDePlantas = "N/A",
-  fechaRetiro = "N/A",
-  fechaSolicitud = "N/A",
-  idComuna = "N/A",
-  idBeneficiario = "N/A",
-  idPrograma = "N/A",
-  rutEncargado = "N/A",
+  numeroGuiaDespacho ,
+  observaciones ,
+  numeroDeSemanas  ,
+  predio ,
+  cantidadDePlantas,
+  fechaRetiro ,
+  fechaSolicitud ,
+  idComuna ,
+  idBeneficiario ,
+  idPrograma,
+  rutEncargado,
 }) => {
+  const FRetiro = new Date(fechaRetiro);
+  const FSolicitud = new Date(fechaSolicitud);
   return (
     <Card containerStyle={styles.cardContainer}>
       <Card.Title style={styles.title}>Despacho</Card.Title>
       <Card.Divider />
 
+
       <View style={styles.row}>
+        <Button
+          buttonStyle={{backgroundColor:"red"}}
+          onPress={()=> openModal(numeroGuiaDespacho)}>
+            Eliminar
+          </Button>
         <Text style={styles.label}>N° Guía Despacho:</Text>
         <Text style={styles.value}>{numeroGuiaDespacho}</Text>
       </View>
@@ -43,13 +51,11 @@ const CardDespacho = ({
       </View>
 
       <View style={styles.row}>
-        <Text style={styles.label}>Fecha Retiro:</Text>
-        <Text style={styles.value}>{formatDate(fechaRetiro)}</Text>
+        <Text style={styles.fecha}>Fecha Retiro:{FRetiro.toISOString().split("T")[0]}</Text>
       </View>
 
       <View style={styles.row}>
-        <Text style={styles.label}>Fecha Solicitud:</Text>
-        <Text style={styles.value}>{formatDate(fechaSolicitud)}</Text>
+        <Text style={styles.fecha}>Fecha Solicitud:{FSolicitud.toISOString().split("T")[0]}</Text>
       </View>
 
       <View style={styles.row}>
@@ -94,6 +100,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 10,
+  },
+  fecha: {
+    fontSize: 16,
   },
   label: {
     fontWeight: "bold",

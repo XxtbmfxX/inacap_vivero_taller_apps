@@ -11,6 +11,29 @@ import {supabase} from '../../lib/supabase'
 const index = () => {
 
   const [semillas, setSemillas] = useState([]);
+  const [codigoSeleccionado, setCodigoSeleccionado] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleDelete = async () => {
+    if (codigoSeleccionado !== null) {
+      const { error } = await supabase
+       .from("semilla")
+       .delete()
+       .eq("codigo_bolsa", codigoSeleccionado);
+
+      if (error == null) {
+        setCodigoSeleccionado(semillas.filter(semilla => semilla.codigo_bolsa !== codigoSeleccionado))
+      }
+
+      setModalVisible(false);
+      setCodigoSeleccionado(null);
+    }
+  };
+
+  const openModal = (id) => {
+    setModalVisible(true);
+    setCodigoSeleccionado(id);
+  };
 
   //Se cambió la función para usar supabase en vez de el AsyncStorage
     const getItems = async () => {
@@ -52,6 +75,7 @@ const index = () => {
         idProcedencia={semilla.id_procedencia}
         idBodega={semilla.id_bodega}
         rutColector={semilla.rut_colector}
+        openModal={openModal}
       />
       
       )):
@@ -59,6 +83,11 @@ const index = () => {
           No hay elementos ＞︿＜
         </Text>
       }
+      <ModalConfirmarDelete
+        visible={modalVisible}
+        onConfirm={handleDelete}
+        onCancel={() => setModalVisible(false)}
+      />
     </ScrollView>
   );
 };

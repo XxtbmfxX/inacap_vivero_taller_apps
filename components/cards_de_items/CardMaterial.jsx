@@ -4,9 +4,10 @@ import React from "react";
 import { Card } from "@rneui/base";
 
 const CardMaterial = ({
-  nombreMaterial = "Nombre del Material",
-  unidadDeMedida = "cm",
-  cantidad = 12,
+  id_material= "N/A",
+  nombreMaterial = "N/A",
+  unidadDeMedida = "N/A",
+  cantidad = "N/A",
 }) => {
   return (
     <>

@@ -7,6 +7,37 @@ import { supabase } from "../../lib/supabase";
 
 const index = () => {
   const [despachos, setDespachos] = useState([]);
+  const [despachoSeleccionado, setDespachoSeleccionado] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleDelete = async () => {
+    if (despachoSeleccionado) {
+
+      const { a } = await supabase
+      .from("despacho")
+      .select()
+      .eq("numero_guia_despacho", despachoSeleccionado.id.toString()); 
+
+      const { error } = await supabase
+       .from("despacho")
+       .delete()
+       .eq("numero_guia_despacho", despachoSeleccionado.id.toString());
+       if (error === null) {
+        setDespachos(
+          despachos.filter((despacho) => despacho.numero_guia_despacho!== despachoSeleccionado.id)
+        );
+       }
+
+
+       setModalVisible(false);
+       setDespachoSeleccionado(null);
+    }
+  };
+
+  const openModal = (item) => {
+    setDespachoSeleccionado(item);
+    setModalVisible(true);
+  };
 
   //Se cambió la función para usar supabase en vez de el AsyncStorage
   const getItems = async () => {
@@ -48,12 +79,19 @@ const index = () => {
           idBeneficiario={despacho.id_beneficiario}
           idPrograma={despacho.id_programa}
           rutEncargado={despacho.rut_encargado}
+          openModal={openModal}
           key={despacho.id_programa}
         />
       ))
       :
       <Text> No hay despachos u.u </Text>
       }
+
+      <ModalConfirmarDelete
+        visible={modalVisible}
+        onConfirm={handleDelete}
+        onCancel={() => setModalVisible(false)}
+      />
     </ScrollView>
   );
 };

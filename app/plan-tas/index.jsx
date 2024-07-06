@@ -13,27 +13,22 @@ const index = () => {
   const [plantaSeleccionada, setPlantaSeleccionada] = useState(null); //-> id de la planta desde la card
   const [modalVisible, setModalVisible] = useState(false);
 
-
   const handleDelete = async () => {
-  
-      
-    if (plantaSeleccionada != null) {     
+    if (plantaSeleccionada != null) {
       const { error } = await supabase
-      .from('planta')
-      .delete()
-      .eq('id_planta', plantaSeleccionada)
+        .from("planta")
+        .delete()
+        .eq("id_planta", plantaSeleccionada);
 
       if (error === null) {
-        setPlantas(plantas.filter(planta => planta.id_planta !== plantaSeleccionada));
+        setPlantas(
+          plantas.filter((planta) => planta.id_planta !== plantaSeleccionada)
+        );
       }
 
-      
       setModalVisible(false);
       setPlantaSeleccionada(null);
     }
-
-
-
   };
 
   const openModal = (id) => {
@@ -41,8 +36,6 @@ const index = () => {
     setModalVisible(true);
   };
 
-
-  //Se cambió la función para usar supabase en vez de el AsyncStorage
   const getItems = async () => {
     let { data } = await supabase.from("planta").select("*");
     setPlantas(data);
@@ -76,6 +69,7 @@ const index = () => {
             numeroCosecha={planta.numero_cosecha}
             numeroSector={planta.numero_sector}
             openModal={openModal}
+            onUpdate={getItems} // Pasamos la función getItems para refrescar la lista
           />
         ))
       ) : (
@@ -87,7 +81,6 @@ const index = () => {
         onConfirm={handleDelete}
         onCancel={() => setModalVisible(false)}
       />
-      
     </ScrollView>
   );
 };

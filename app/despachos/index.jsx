@@ -1,6 +1,8 @@
 import { ScrollView, Text } from "react-native";
 import React, { useEffect, useState } from "react";
 
+import ModalConfirmarDelete from "../../components/ModalConfirmarDelete";
+
 import CardDespacho from "../../components/cards_de_items/CardDespacho";
 import Navegacion from "../../components/Navegacion";
 import { supabase } from "../../lib/supabase";
@@ -12,25 +14,20 @@ const index = () => {
 
   const handleDelete = async () => {
     if (despachoSeleccionado) {
-
-      const { a } = await supabase
-      .from("despacho")
-      .select()
-      .eq("numero_guia_despacho", despachoSeleccionado.id.toString()); 
-
       const { error } = await supabase
-       .from("despacho")
-       .delete()
-       .eq("numero_guia_despacho", despachoSeleccionado.id.toString());
-       if (error === null) {
+        .from("despacho")
+        .delete()
+        .eq("numero_guia_despacho", despachoSeleccionado);
+      if (error === null) {
         setDespachos(
-          despachos.filter((despacho) => despacho.numero_guia_despacho!== despachoSeleccionado.id)
+          despachos.filter(
+            (despacho) => despacho.numero_guia_despacho !== despachoSeleccionado
+          )
         );
-       }
+      }
 
-
-       setModalVisible(false);
-       setDespachoSeleccionado(null);
+      setModalVisible(false);
+      setDespachoSeleccionado(null);
     }
   };
 
@@ -39,7 +36,6 @@ const index = () => {
     setModalVisible(true);
   };
 
-  //Se cambió la función para usar supabase en vez de el AsyncStorage
   const getItems = async () => {
     let { data } = await supabase.from("despacho").select("*");
     setDespachos(data);
@@ -64,28 +60,28 @@ const index = () => {
         titulo={"agregar Despacho"}
         screen={"/despachos/add_despacho"}
       />
-      {
-      despachos.length > 0 ?
-      despachos.map((despacho, indice) => (
-        <CardDespacho
-          numeroGuiaDespacho={despacho.numero_guia_despacho}
-          observaciones={despacho.observaciones}
-          numeroDeSemanas={despacho.numero_de_semanas}
-          predio={despacho.predio}
-          cantidadDePlantas={despacho.cantidad_de_plantas}
-          fechaRetiro={despacho.fecha_retiro}
-          fechaSolicitud={despacho.fecha_solicitud}
-          idComuna={despacho.id_comuna}
-          idBeneficiario={despacho.id_beneficiario}
-          idPrograma={despacho.id_programa}
-          rutEncargado={despacho.rut_encargado}
-          openModal={openModal}
-          key={despacho.id_programa}
-        />
-      ))
-      :
-      <Text> No hay despachos u.u </Text>
-      }
+      {despachos.length > 0 ? (
+        despachos.map((despacho) => (
+          <CardDespacho
+            numeroGuiaDespacho={despacho.numero_guia_despacho}
+            observaciones={despacho.observaciones}
+            numeroDeSemanas={despacho.numero_de_semanas}
+            predio={despacho.predio}
+            cantidadDePlantas={despacho.cantidad_de_plantas}
+            fechaRetiro={despacho.fecha_retiro}
+            fechaSolicitud={despacho.fecha_solicitud}
+            idComuna={despacho.id_comuna}
+            idBeneficiario={despacho.id_beneficiario}
+            idPrograma={despacho.id_programa}
+            rutEncargado={despacho.rut_encargado}
+            openModal={openModal}
+            key={despacho.numero_guia_despacho}
+            onUpdate={getItems} // Pasamos la función getItems para refrescar la lista
+          />
+        ))
+      ) : (
+        <Text> No hay despachos u.u </Text>
+      )}
 
       <ModalConfirmarDelete
         visible={modalVisible}

@@ -1,6 +1,7 @@
 import { ScrollView, Text } from "react-native";
 import React, { useEffect, useState } from "react";
 
+import ModalConfirmarDelete from "../../components/ModalConfirmarDelete";
 import Navegacion from "../../components/Navegacion";
 import CardMaterial from "../../components/cards_de_items/CardMaterial";
 
@@ -12,19 +13,23 @@ const index = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleDelete = async () => {
-
     if (materialSeleccionado !== null) {
+      console.log(materialSeleccionado);
+
       const { error } = await supabase
-       .from("material")
-       .delete()
-       .eq("id_material", materialSeleccionado);
+        .from("material")
+        .delete()
+        .eq("id_material", materialSeleccionado);
       if (error == null) {
-        setMateriales(materiales.filter((material) => material.id_material!== materialSeleccionado));
+        setMateriales(
+          materiales.filter(
+            (material) => material.id_material !== materialSeleccionado
+          )
+        );
       }
 
       setModalVisible(false);
       setMaterialSeleccionado(null);
-
     }
   };
 
@@ -33,14 +38,13 @@ const index = () => {
     setModalVisible(true);
   };
 
-//Se cambió la función para usar supabase en vez de el AsyncStorage
   const getItems = async () => {
-    let { data} = await supabase.from("material").select("*");
+    let { data } = await supabase.from("material").select("*");
     setMateriales(data);
   };
 
   useEffect(() => {
-    getItems()
+    getItems();
   }, []);
 
   return (
@@ -59,13 +63,15 @@ const index = () => {
         screen={"/materiales/add_materiales"}
       />
       {materiales.length > 0 ? (
-        materiales.map((material, indice) => (
+        materiales.map((material) => (
           <CardMaterial
             nombreMaterial={material.nombre}
             unidadDeMedida={material.unidad_de_medida}
             cantidad={material.cantidad}
-            key={indice}
+            key={material.id_material}
+            idMaterial={material.id_material}
             openModal={openModal}
+            onUpdate={getItems} // Pasamos la función getItems para refrescar la lista
           />
         ))
       ) : (
@@ -79,7 +85,6 @@ const index = () => {
         onConfirm={handleDelete}
         onCancel={() => setModalVisible(false)}
       />
-      
     </ScrollView>
   );
 };

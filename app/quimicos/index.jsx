@@ -41,7 +41,7 @@ const index = () => {
 
   const getItems = async () => {
     if(químicos.length === 0) {
-      let { data, error } = await supabase.from("quimico").select("*");
+      let { data } = await supabase.from("quimico").select("*");
       setQuímicos(data);
     } 
     

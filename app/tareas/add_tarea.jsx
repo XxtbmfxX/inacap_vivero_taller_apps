@@ -39,8 +39,7 @@ const AddTarea = () => {
           nombre_tarea: nombreTarea,
           descripcion_tarea: descripcionTarea,
         },
-      ])
-      .select();
+      ]);
 
     if (error) {
       console.error("Error al añadir tarea:", error);

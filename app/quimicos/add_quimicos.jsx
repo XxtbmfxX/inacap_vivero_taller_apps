@@ -1,4 +1,3 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
@@ -29,6 +28,14 @@ const AgregarQuimicosForm = () => {
   };
 
   const handleSubmit = async () => {
+
+    const erroresValidacion = validarFormularioQuimico(quimico);
+    if (Object.keys(erroresValidacion).length > 0) {
+      setErrores(erroresValidacion);
+      return;
+    }
+
+
     const { data, error } = await supabase.from("quimico").insert([
       {
         nombre: quimico.nombre,

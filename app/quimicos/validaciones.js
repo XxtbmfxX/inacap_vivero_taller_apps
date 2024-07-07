@@ -50,10 +50,6 @@ export const validarFormularioQuimico = (quimico) => {
     errores.nombre = errorNombre;
   }
 
-  const errorFechaIngreso = validarFechaIngreso(quimico.fechaIngreso);
-  if (errorFechaIngreso) {
-    errores.fechaIngreso = errorFechaIngreso;
-  }
 
   const errorContenido = validarContenido(quimico.contenido);
   if (errorContenido) {

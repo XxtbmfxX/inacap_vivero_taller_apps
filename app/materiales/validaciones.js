@@ -1,38 +1,46 @@
-export const validarNombreMateriales = (nombre) => {
+export const validarNombreMaterial = (nombre) => {
   if (!nombre || nombre.trim().length === 0) {
-    return 'El nombre de los materiales es obligatorios.';
+    return 'El nombre del material es obligatorio.';
   }
-
   if (nombre.length < 3) {
-    return 'El nombre de los materiales deben tener al menos 3 caracteres.';
+    return 'El nombre del material debe tener al menos 3 caracteres.';
   }
-
   return '';
 };
 
-export const validarDescripcionTarea = (descripcion) => {
-  if (!descripcion || descripcion.trim().length === 0) {
-    return 'La descripción de los materiales son obligatorios.';
+export const validarUnidadDeMedida = (unidadDeMedida) => {
+  if (!unidadDeMedida || unidadDeMedida.trim().length === 0) {
+    return 'La unidad de medida es obligatoria.';
   }
-
-  if (descripcion.length < 10) {
-    return 'La descripción de los materiales deben tener al menos 10 caracteres.';
-  }
-
   return '';
 };
 
-export const validarFormularioTarea = (nombre, descripcion) => {
+export const validarCantidadMaterial = (cantidad) => {
+  if (!cantidad || cantidad.trim().length === 0) {
+    return 'La cantidad es obligatoria.';
+  }
+  if (isNaN(cantidad)) {
+    return 'La cantidad debe ser un número válido.';
+  }
+  return '';
+};
+
+export const validarFormularioMaterial = (nombre, unidadDeMedida, cantidad) => {
   const errores = {};
 
-  const errorNombre = validarNombreMateriales(nombre);
+  const errorNombre = validarNombreMaterial(nombre);
   if (errorNombre) {
     errores.nombre = errorNombre;
   }
 
-  const errorDescripcion = validarDescripcionMateriales(descripcion);
-  if (errorDescripcion) {
-    errores.descripcion = errorDescripcion;
+  const errorUnidadDeMedida = validarUnidadDeMedida(unidadDeMedida);
+  if (errorUnidadDeMedida) {
+    errores.unidadDeMedida = errorUnidadDeMedida;
+  }
+
+  const errorCantidad = validarCantidadMaterial(cantidad);
+  if (errorCantidad) {
+    errores.cantidad = errorCantidad;
   }
 
   return errores;

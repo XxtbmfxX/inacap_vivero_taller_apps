@@ -1,41 +1,45 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-
-
+import { supabase } from "../../lib/supabase";
+import { useItems } from '../../context/ItemsContext';
+import { validarFormularioMaterial } from "./validaciones";
 
 const IngresarMaterialesForm = () => {
-  const [material, setMaterial] = useState({
-    nombreMaterial: "",
-    unidadDeMedida: "",
-    cantidad: ""
-  });
+  const { getMaterial } = useItems();
+  const [nombreMaterial, setNombreMaterial] = useState("");
+  const [unidadDeMedida, setUnidadDeMedida] = useState("");
+  const [cantidadMaterial, setCantidadMaterial] = useState("");
+  const [errores, setErrores] = useState({});
   const router = useRouter();
 
-  const handleChange = (name, value) => {
-    setMaterial({
-      ...material,
-      [name]: value
-    });
-  };
-
   const handleSubmit = async () => {
-    //agregar validación de texto
+    const erroresValidacion = validarFormularioMaterial(
+      nombreMaterial,
+      unidadDeMedida,
+      cantidadMaterial
+    );
+    if (Object.keys(erroresValidacion).length > 0) {
+      setErrores(erroresValidacion);
+      return;
+    }
+    setErrores({});
+    const { data, error } = await supabase
+      .from("material")
+      .insert([{
+        nombre_material: nombreMaterial,
+        unidad_medida: unidadDeMedida,
+        cantidad: cantidadMaterial
+      }]);
 
-
-    //spread operator
-    const nuevoMaterial = { ...material };
-
-    try {
-      const materialesGuardados = await AsyncStorage.getItem("materiales");
-      const materiales = materialesGuardados ? JSON.parse(materialesGuardados) : [];
-      materiales.push(nuevoMaterial);
-      await AsyncStorage.setItem("materiales", JSON.stringify(materiales));
-
+    if (error) {
+      console.error("Error al añadir material: ", error);
+      setErrores({
+        general: "Error al añadir el material. Por favor, inténtalo de nuevo."
+      });
+    } else {
+      getMaterial();
       router.back();
-    } catch (error) {
-      console.error("Error al guardar el químico:", error);
     }
   };
 
@@ -44,23 +48,31 @@ const IngresarMaterialesForm = () => {
       <Text style={styles.title}>Ingresar Materiales</Text>
       <TextInput
         style={styles.input}
-        placeholder="Nombre"
-        value={material.nombreMaterial}
-        onChangeText={text => handleChange('nombreMaterial', text)}
+        placeholder="Nombre Material"
+        value={nombreMaterial}
+        onChangeText={setNombreMaterial}
       />
+      {errores.nombre && <Text style={styles.errorText}>{errores.nombre}</Text>}
       <TextInput
         style={styles.input}
         placeholder="Unidad de Medida"
-        value={material.unidadDeMedida}
-        onChangeText={text => handleChange('unidadDeMedida', text)}
+        value={unidadDeMedida}
+        onChangeText={setUnidadDeMedida}
       />
+      {errores.unidadDeMedida && (
+        <Text style={styles.errorText}>{errores.unidadDeMedida}</Text>
+      )}
       <TextInput
         style={styles.input}
         placeholder="Cantidad"
         keyboardType="numeric"
-        value={material.cantidad}
-        onChangeText={text => handleChange('cantidad', text)}
+        value={cantidadMaterial}
+        onChangeText={setCantidadMaterial}
       />
+      {errores.cantidad && <Text style={styles.errorText}>{errores.cantidad}</Text>}
+      {errores.general && (
+        <Text style={styles.errorText}>{errores.general}</Text>
+      )}
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Guardar</Text>
       </TouchableOpacity>
@@ -71,36 +83,40 @@ const IngresarMaterialesForm = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
     padding: 20,
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     padding: 10,
     marginBottom: 10,
-    width: '100%',
+    width: "100%",
     borderRadius: 20,
-    backgroundColor: '#D5DBDB',
+    backgroundColor: "#D5DBDB",
   },
   button: {
-    backgroundColor: '#000',
+    backgroundColor: "#358",
     padding: 10,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 10,
     borderRadius: 10,
-    width: '100%',
   },
   buttonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
+  },
+  errorText: {
+    color: "red",
+    fontSize: 12,
+    marginBottom: 10,
   },
 });
 

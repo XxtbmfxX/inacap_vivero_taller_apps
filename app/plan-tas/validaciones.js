@@ -1,38 +1,72 @@
-export const validarNombrePlanta = (nombre) => {
-  if (!nombre || nombre.trim().length === 0) {
-    return 'El nombre de la planta es obligatorio.';
+export const validarEspecie = (especie) => {
+  if (!especie || especie.trim().length === 0) {
+    return 'La especie es obligatoria.';
   }
 
-  if (nombre.length < 3) {
-    return 'El nombre de la planta debe tener al menos 3 caracteres.';
-  }
-
-  return '';
-};
-
-export const validarDescripcionPlanta = (descripcion) => {
-  if (!descripcion || descripcion.trim().length === 0) {
-    return 'La descripción de la planta es obligatoria.';
-  }
-
-  if (descripcion.length < 10) {
-    return 'La descripción de la planta debe tener al menos 10 caracteres.';
+  if (especie.length < 3) {
+    return 'La especie debe tener al menos 3 caracteres.';
   }
 
   return '';
 };
 
-export const validarFormularioPlanta = (nombre, descripcion) => {
+export const validarAñoDespacho = (añoDespacho) => {
+  if (!añoDespacho || añoDespacho.trim().length === 0) {
+    return 'El año de despacho es obligatorio.';
+  }
+
+  if (!/^\d{4}$/.test(añoDespacho)) {
+    return 'El año de despacho debe ser un año válido.';
+  }
+
+  return '';
+};
+
+export const validarNumeroSector = (numeroSector) => {
+  if (!numeroSector || numeroSector.trim().length === 0) {
+    return 'El número de sector es obligatorio.';
+  }
+
+  if (numeroSector.length < 1) {
+    return 'El número de sector debe tener al menos 1 carácter.';
+  }
+
+  return '';
+};
+
+export const validarNumeroPlatabanda = (numeroPlatabanda) => {
+  if (!numeroPlatabanda || numeroPlatabanda.trim().length === 0) {
+    return 'El número de platabanda es obligatorio.';
+  }
+
+  if (numeroPlatabanda.length < 1) {
+    return 'El número de platabanda debe tener al menos 1 carácter.';
+  }
+
+  return '';
+};
+
+export const validarFormularioPlanta = (especie, añoDespacho, numeroSector, numeroPlatabanda) => {
   const errores = {};
 
-  const errorNombre = validarNombrePlanta(nombre);
-  if (errorNombre) {
-    errores.nombre = errorNombre;
+  const errorEspecie = validarEspecie(especie);
+  if (errorEspecie) {
+    errores.especie = errorEspecie;
   }
 
-  const errorDescripcion = validarDescripcionPlanta(descripcion);
-  if (errorDescripcion) {
-    errores.descripcion = errorDescripcion;
+  const errorAñoDespacho = validarAñoDespacho(añoDespacho);
+  if (errorAñoDespacho) {
+    errores.añoDespacho = errorAñoDespacho;
+  }
+
+  const errorNumeroSector = validarNumeroSector(numeroSector);
+  if (errorNumeroSector) {
+    errores.numeroSector = errorNumeroSector;
+  }
+
+  const errorNumeroPlatabanda = validarNumeroPlatabanda(numeroPlatabanda);
+  if (errorNumeroPlatabanda) {
+    errores.numeroPlatabanda = errorNumeroPlatabanda;
   }
 
   return errores;

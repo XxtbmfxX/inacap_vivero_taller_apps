@@ -3,13 +3,13 @@ import React, { useEffect, useState } from "react";
 
 import ModalConfirmarDelete from "../../components/ModalConfirmarDelete";
 
-import Cardsemillas from "../../components/cards_de_items/CardSemillas";
+import CardSemillas from "../../components/cards_de_items/CardSemillas";
 import Navegacion from "../../components/Navegacion";
 
 import { supabase } from "../../lib/supabase";
 import { useItems } from "../../context/ItemsContext";
 
-const index = () => {
+const Index = () => {
   const { semillas, getSemillas, setSemillas } = useItems();
 
   const [codigoSeleccionado, setCodigoSeleccionado] = useState(null);
@@ -22,9 +22,8 @@ const index = () => {
         .delete()
         .eq("codigo_bolsa", codigoSeleccionado);
 
-      if (error == null) {
-        setSemillas(semillas.filter(semilla => semilla.codigo_bolsa !== setCodigoSeleccionado));
-
+      if (!error) {
+        setSemillas(semillas.filter(semilla => semilla.codigo_bolsa !== codigoSeleccionado));
       }
 
       setModalVisible(false);
@@ -35,6 +34,10 @@ const index = () => {
   const openModal = (id) => {
     setModalVisible(true);
     setCodigoSeleccionado(id);
+  };
+
+  const handleUpdate = async () => {
+    await getSemillas();
   };
 
   useEffect(() => {
@@ -59,7 +62,7 @@ const index = () => {
 
       {semillas.length > 0 ? (
         semillas.map((semilla) => (
-          <Cardsemillas
+          <CardSemillas
             key={semilla.codigo_bolsa}
             codigoBolsa={semilla.codigo_bolsa}
             cantidad={semilla.cantidad}
@@ -74,6 +77,7 @@ const index = () => {
             idBodega={semilla.id_bodega}
             rutColector={semilla.rut_colector}
             openModal={openModal}
+            onUpdate={handleUpdate}
           />
         ))
       ) : (
@@ -88,4 +92,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;

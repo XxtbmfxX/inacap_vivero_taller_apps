@@ -1,8 +1,12 @@
-import { router } from 'expo-router';
+import { router, useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { useItems } from '../../context/ItemsContext';
+import { validarFormularioDespacho } from "./validaciones";
+import { supabase } from "../../lib/supabase";
 
 const AgregarDespachoForm = () => {
+  const { getDespacho } = useItems();
   const [numeroGuia, setNumeroGuia] = useState('');
   const [nombrePredio, setNombrePredio] = useState('');
   const [fechaSolicitud, setFechaSolicitud] = useState('');
@@ -11,111 +15,183 @@ const AgregarDespachoForm = () => {
   const [especies, setEspecies] = useState('');
   const [numeroSemanas, setNumeroSemanas] = useState('');
   const [observacion, setObservacion] = useState('');
+  const [errores, setErrores] = useState({});
+  const router = useRouter();
 
-  const handleSubmit = () => {
-    console.log('Nombre Predio:', nombrePredio);
-    console.log('Fecha Solicitud:', fechaSolicitud);
-    console.log('Fecha Retiro:', fechaRetiro);
-    console.log('Cantidad Plantas:', cantidadPlantas);
-    console.log('Especies:', especies);
-    console.log('Número Semanas:', numeroSemanas);
-    console.log('Observación:', observacion);
-    router.back()
+  const handleSubmit = async () => {
+    const erroresValidacion = validarFormularioDespacho(
+      numeroGuia,
+      nombrePredio,
+      fechaSolicitud,
+      fechaRetiro,
+      cantidadPlantas,
+      especies,
+      numeroSemanas,
+      observacion
+    );
+    if (Object.keys(erroresValidacion).length > 0) {
+      setErrores(erroresValidacion);
+      return;
+    }
+
+    setErrores({});
+
+    const { data, error } = await supabase
+      .from('despacho')
+      .insert({
+        numero_guia_despacho: numeroGuia,
+        predio: nombrePredio,
+        fecha_solicitud: fechaSolicitud,
+        fecha_retiro: fechaRetiro,
+        cantidad_de_plantas: cantidadPlantas,
+        especies: especies,
+        numero_de_semanas: numeroSemanas,
+        observaciones: observacion
+      })
+      .select();
+
+    if (error) {
+      console.error("Error al añadir despacho:", error);
+      setErrores({ general: "Error al añadir el despacho. Por favor, inténtalo de nuevo." });
+    } else {
+      getDespacho();
+      router.back();
+    }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Agregar Despacho</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Nombre Predio"
-        placeholderTextColor="#000"
-        value={nombrePredio}
-        onChangeText={text => setNombrePredio(text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Fecha Solicitud"
-        placeholderTextColor="#000"
-        value={fechaSolicitud}
-        onChangeText={text => setFechaSolicitud(text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Fecha Retiro"
-        placeholderTextColor="#000"
-        value={fechaRetiro}
-        onChangeText={text => setFechaRetiro(text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Cantidad de Plantas"
-        placeholderTextColor="#000"
-        value={cantidadPlantas}
-        onChangeText={text => setCantidadPlantas(text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Especies"
-        placeholderTextColor="#000"
-        value={especies}
-        onChangeText={text => setEspecies(text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Número de Semanas"
-        placeholderTextColor="#000"
-        value={numeroSemanas}
-        onChangeText={text => setNumeroSemanas(text)}
-      />
-      <TextInput
-        style={[styles.input, { height: 100 }]}
-        placeholder="Observación"
-        placeholderTextColor="#000"
-        multiline
-        value={observacion}
-        onChangeText={text => setObservacion(text)}
-      />
-      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>Guardar</Text>
-      </TouchableOpacity>
-    </View>
+    <ScrollView>
+      <View style={styles.container}>
+        <Text style={styles.title}>Agregar Despacho</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Número de Guía Despacho"
+          placeholderTextColor="#000"
+          value={numeroGuia}
+          onChangeText={setNumeroGuia}
+        />
+        {errores.numeroGuia && (
+          <Text style={styles.errorText}>{errores.numeroGuia}</Text>
+        )}
+        <TextInput
+          style={styles.input}
+          placeholder="Nombre Predio"
+          placeholderTextColor="#000"
+          value={nombrePredio}
+          onChangeText={setNombrePredio}
+        />
+        {errores.nombrePredio && (
+          <Text style={styles.errorText}>{errores.nombrePredio}</Text>
+        )}
+        <TextInput
+          style={styles.input}
+          placeholder="Fecha Solicitud"
+          placeholderTextColor="#000"
+          value={fechaSolicitud}
+          onChangeText={setFechaSolicitud}
+        />
+        {errores.fechaSolicitud && (
+          <Text style={styles.errorText}>{errores.fechaSolicitud}</Text>
+        )}
+        <TextInput
+          style={styles.input}
+          placeholder="Fecha Retiro"
+          placeholderTextColor="#000"
+          value={fechaRetiro}
+          onChangeText={setFechaRetiro}
+        />
+        {errores.fechaRetiro && (
+          <Text style={styles.errorText}>{errores.fechaRetiro}</Text>
+        )}
+        <TextInput
+          style={styles.input}
+          placeholder="Cantidad de Plantas"
+          placeholderTextColor="#000"
+          value={cantidadPlantas}
+          onChangeText={setCantidadPlantas}
+        />
+        {errores.cantidadPlantas && (
+          <Text style={styles.errorText}>{errores.cantidadPlantas}</Text>
+        )}
+        <TextInput
+          style={styles.input}
+          placeholder="Especies"
+          placeholderTextColor="#000"
+          value={especies}
+          onChangeText={setEspecies}
+        />
+        {errores.especies && (
+          <Text style={styles.errorText}>{errores.especies}</Text>
+        )}
+        <TextInput
+          style={styles.input}
+          placeholder="Número de Semanas"
+          placeholderTextColor="#000"
+          value={numeroSemanas}
+          onChangeText={setNumeroSemanas}
+        />
+        {errores.numeroSemanas && (
+          <Text style={styles.errorText}>{errores.numeroSemanas}</Text>
+        )}
+        <TextInput
+          style={[styles.input, { height: 100 }]}
+          placeholder="Observación"
+          placeholderTextColor="#000"
+          multiline
+          value={observacion}
+          onChangeText={setObservacion}
+        />
+        {errores.observacion && (
+          <Text style={styles.errorText}>{errores.observacion}</Text>
+        )}
+        {errores.general && (
+          <Text style={styles.errorText}>{errores.general}</Text>
+        )}
+        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+          <Text style={styles.buttonText}>Guardar</Text>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
     padding: 20,
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     padding: 10,
     marginBottom: 10,
-    width: '100%',
+    width: "100%",
     borderRadius: 20,
-    backgroundColor: '#D5DBDB',
+    backgroundColor: "#D5DBDB",
   },
   button: {
-    backgroundColor: '#000',
+    backgroundColor: "#358",
     padding: 10,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 10,
-    borderRadius:10,
+    borderRadius: 10,
   },
   buttonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    
+  },
+  errorText: {
+    color: "red",
+    fontSize: 12,
+    marginBottom: 10,
   },
 });
 

@@ -1,28 +1,30 @@
 import { ScrollView, Text } from "react-native";
 import React, { useEffect, useState } from "react";
 
+import ModalConfirmarDelete from "../../components/ModalConfirmarDelete";
+
 import Cardsemillas from "../../components/cards_de_items/CardSemillas";
 import Navegacion from "../../components/Navegacion";
 
-
-import {supabase} from '../../lib/supabase'
-
+import { supabase } from "../../lib/supabase";
+import { useItems } from "../../context/ItemsContext";
 
 const index = () => {
+  const { semillas, getSemillas, setSemillas } = useItems();
 
-  const [semillas, setSemillas] = useState([]);
   const [codigoSeleccionado, setCodigoSeleccionado] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleDelete = async () => {
     if (codigoSeleccionado !== null) {
       const { error } = await supabase
-       .from("semilla")
-       .delete()
-       .eq("codigo_bolsa", codigoSeleccionado);
+        .from("semilla")
+        .delete()
+        .eq("codigo_bolsa", codigoSeleccionado);
 
       if (error == null) {
-        setCodigoSeleccionado(semillas.filter(semilla => semilla.codigo_bolsa !== codigoSeleccionado))
+        setSemillas(semillas.filter(semilla => semilla.codigo_bolsa !== setCodigoSeleccionado));
+
       }
 
       setModalVisible(false);
@@ -35,21 +37,13 @@ const index = () => {
     setCodigoSeleccionado(id);
   };
 
-  //Se cambió la función para usar supabase en vez de el AsyncStorage
-    const getItems = async () => {
-      let { data} = await supabase.from("semilla").select("*");
-      setSemillas(data);
-    };
-  
-    useEffect(() => {
-      getItems()
-    }, []);
-
-  
+  useEffect(() => {
+    getSemillas();
+  }, []);
 
   return (
     <ScrollView contentContainerStyle={{ alignItems: "center" }}>
-        <Text
+      <Text
         style={{
           fontSize: 30,
           marginHorizontal: "auto",
@@ -58,31 +52,33 @@ const index = () => {
       >
         Semillas
       </Text>
-      <Navegacion titulo={"agregar semilla"} screen={"/semillas/add_semillas"} />
-
-      {semillas.length > 0 ? semillas.map((semilla, indice) => (
-        <Cardsemillas
-        key={indice}
-        codigoBolsa={semilla.codigo_bolsa}
-        cantidad={semilla.cantidad}
-        fechaRecepcion={semilla.fecha_recepcion}
-        fechaColecta={semilla.fecha_colecta}
-        porcentajeGerminacion={semilla.porcentaje_germinacion}
-        pesoEnviado={semilla.peso_enviado}
-        pesoRecibido={semilla.peso_recibido}
-        condicionSemilla={semilla.condicion_semilla}
-        idEspecie={semilla.id_especie}
-        idProcedencia={semilla.id_procedencia}
-        idBodega={semilla.id_bodega}
-        rutColector={semilla.rut_colector}
-        openModal={openModal}
+      <Navegacion
+        titulo={"agregar semilla"}
+        screen={"/semillas/add_semillas"}
       />
-      
-      )):
-        <Text>
-          No hay elementos ＞︿＜
-        </Text>
-      }
+
+      {semillas.length > 0 ? (
+        semillas.map((semilla) => (
+          <Cardsemillas
+            key={semilla.codigo_bolsa}
+            codigoBolsa={semilla.codigo_bolsa}
+            cantidad={semilla.cantidad}
+            fechaRecepcion={semilla.fecha_recepcion}
+            fechaColecta={semilla.fecha_colecta}
+            porcentajeGerminacion={semilla.porcentaje_germinacion}
+            pesoEnviado={semilla.peso_enviado}
+            pesoRecibido={semilla.peso_recibido}
+            condicionSemilla={semilla.condicion_semilla}
+            idEspecie={semilla.id_especie}
+            idProcedencia={semilla.id_procedencia}
+            idBodega={semilla.id_bodega}
+            rutColector={semilla.rut_colector}
+            openModal={openModal}
+          />
+        ))
+      ) : (
+        <Text>No hay elementos ＞︿＜</Text>
+      )}
       <ModalConfirmarDelete
         visible={modalVisible}
         onConfirm={handleDelete}

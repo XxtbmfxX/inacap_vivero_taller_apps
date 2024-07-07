@@ -1,46 +1,53 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Picker } from 'react-native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { router } from "expo-router";
+import React, { useState } from "react";
+import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+
+import { validarFormularioQuimico } from "./validaciones";
+import { useItems } from "../../context/ItemsContext";
+import { supabase } from "../../lib/supabase";
 
 const AgregarQuimicosForm = () => {
+  const { getQuímicos } = useItems();
+
   const [errores, setErrores] = useState({});
 
   const [quimico, setQuimico] = useState({
     nombre: "",
-    fechaIngreso: "",
     contenido: "",
     categoria: "",
     presentacion: "",
+    cantidad: "",
     etiqueta: "",
-    bodega: ""
   });
 
-  const router = useRouter();
-
   const handleChange = (field, value) => {
-    setQuimico(prevState => ({
+    setQuimico((prevState) => ({
       ...prevState,
       [field]: value,
     }));
   };
 
   const handleSubmit = async () => {
-    //agregar validación de texto
+    const { data, error } = await supabase.from("quimico").insert([
+      {
+        nombre: quimico.nombre,
+        contenido: quimico.contenido,
+        categoria: quimico.categoria,
+        presentacion: quimico.presentacion,
+        cantidad: quimico.cantidad,
+        id_etiqueta: quimico.etiqueta,
+      },
+    ]);
 
-
-    //spread operator
-    const nuevoQuimico = { ...quimico };
-
-    try {
-      const quimicosGuardados = await AsyncStorage.getItem("quimicos");
-      const quimicos = quimicosGuardados ? JSON.parse(quimicosGuardados) : [];
-      quimicos.push(nuevoQuimico);
-      await AsyncStorage.setItem("quimicos", JSON.stringify(quimicos));
-
+    if (error) {
+      console.error("Error al añadir tarea:", error);
+      setErrores({
+        general: "Error al añadir la tarea. Por favor, inténtalo de nuevo.",
+      });
+    } else {
+      getQuímicos();
       router.back();
-    } catch (error) {
-      console.error("Error al guardar el químico:", error);
     }
   };
 
@@ -51,44 +58,51 @@ const AgregarQuimicosForm = () => {
         style={styles.input}
         placeholder="Nombre"
         value={quimico.nombre}
-        onChangeText={text => handleChange('nombre', text)}
+        onChangeText={(text) => handleChange("nombre", text)}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Fecha de Ingreso"
-        value={quimico.fechaIngreso}
-        onChangeText={text => handleChange('fechaIngreso', text)}
-      />
+      {errores.nombre && <Text style={styles.errorText}>{errores.nombre}</Text>}
+
       <TextInput
         style={styles.input}
         placeholder="Contenido"
         value={quimico.contenido}
-        onChangeText={text => handleChange('contenido', text)}
+        onChangeText={(text) => handleChange("contenido", text)}
       />
+      {errores.contenido && (
+        <Text style={styles.errorText}>{errores.contenido}</Text>
+      )}
+
       <TextInput
         style={styles.input}
-        placeholder="Categoría"
+        placeholder="Categoría (1, 2)"
         value={quimico.categoria}
-        onChangeText={text => handleChange('categoria', text)}
+        onChangeText={(text) => handleChange("categoria", text)}
       />
+     
+      <TextInput
+        style={styles.input}
+        placeholder="Cantidad"
+        value={quimico.cantidad}
+        onChangeText={(text) => handleChange("cantidad", text)}
+      />
+
       <TextInput
         style={styles.input}
         placeholder="Presentación"
         value={quimico.presentacion}
-        onChangeText={text => handleChange('presentacion', text)}
+        onChangeText={(text) => handleChange("presentacion", text)}
       />
+
       <TextInput
         style={styles.input}
-        placeholder="Etiqueta"
+        placeholder="Etiqueta (1)"
         value={quimico.etiqueta}
-        onChangeText={text => handleChange('etiqueta', text)}
+        onChangeText={(text) => handleChange("etiqueta", text)}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Bodega"
-        value={quimico.bodega}
-        onChangeText={text => handleChange('bodega', text)}
-      />
+
+
+       {errores.general && <Text style={styles.errorText}>{errores.general}</Text>}
+
       <Button title="Guardar" onPress={handleSubmit} />
     </View>
   );
@@ -97,36 +111,40 @@ const AgregarQuimicosForm = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
     padding: 20,
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     padding: 10,
     marginBottom: 10,
-    width: '100%',
+    width: "100%",
     borderRadius: 20,
-    backgroundColor: '#D5DBDB',
+    backgroundColor: "#D5DBDB",
   },
   button: {
-    backgroundColor: '#000',
+    backgroundColor: "#000",
     padding: 10,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 10,
-    borderRadius:10,
+    borderRadius: 10,
   },
   buttonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    
+  },
+  errorText: {
+    color: "red",
+    fontSize: 12,
+    marginBottom: 10,
   },
 });
 

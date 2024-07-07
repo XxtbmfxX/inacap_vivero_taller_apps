@@ -1,21 +1,30 @@
 import { Text, TextInput, StyleSheet } from "react-native";
-import React, { useState } from "react";
+import React, { Children, useState } from "react";
 import { Button, Card } from "@rneui/base";
 import { supabase } from "../../lib/supabase";
 
-const CardTareas = ({ nombreTarea, descripción, idTarea, onUpdate }) => {
+const CardTareas = ({
+  nombreTarea,
+  descripción,
+  idTarea,
+  onUpdate,
+  openModal,
+}) => {
   const [editMode, setEditMode] = useState(false);
   const [newNombreTarea, setNewNombreTarea] = useState(nombreTarea);
   const [newDescripcion, setNewDescripcion] = useState(descripción);
 
   const handleUpdate = async () => {
     const { error } = await supabase
-      .from('tarea')
-      .update({ nombre_tarea: newNombreTarea, descripcion_tarea: newDescripcion })
-      .eq('id_tarea', idTarea);
+      .from("tarea")
+      .update({
+        nombre_tarea: newNombreTarea,
+        descripcion_tarea: newDescripcion,
+      })
+      .eq("id_tarea", idTarea);
 
     if (!error) {
-      onUpdate(); // Para refrescar la lista de tareas
+      onUpdate();
       setEditMode(false);
     } else {
       console.log(error.message);
@@ -43,10 +52,23 @@ const CardTareas = ({ nombreTarea, descripción, idTarea, onUpdate }) => {
         </>
       ) : (
         <>
+          <Button
+            buttonStyle={{ backgroundColor: "red" }}
+            onPress={() => openModal(idTarea)}
+          >
+            Eliminar
+          </Button>
           <Card.Title style={styles.cardTitle}>{nombreTarea}</Card.Title>
+
           <Card.Divider />
-          <Text style={styles.cardDescription}>Id:{idTarea} {descripción}</Text>
-          <Button title="Actualizar"  buttonStyle={{marginTop: 20}} onPress={() => setEditMode(true)} />
+          <Text style={styles.cardDescription}>
+            Id:{idTarea} {descripción}
+          </Text>
+          <Button
+            title="Actualizar"
+            buttonStyle={{ marginTop: 20 }}
+            onPress={() => setEditMode(true)}
+          />
         </>
       )}
     </Card>
@@ -73,7 +95,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    borderColor: 'gray',
+    borderColor: "gray",
     borderWidth: 1,
     marginBottom: 10,
     paddingHorizontal: 10,

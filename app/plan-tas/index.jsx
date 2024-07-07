@@ -7,9 +7,11 @@ import Navegacion from "../../components/Navegacion";
 import CardPlantas from "../../components/cards_de_items/CardPlantas";
 
 import { supabase } from "../../lib/supabase";
+import { useItems } from "../../context/ItemsContext";
 
 const index = () => {
-  const [plantas, setPlantas] = useState([]);
+  const { plantas, setPlantas, getPlantas } = useItems();
+
   const [plantaSeleccionada, setPlantaSeleccionada] = useState(null); //-> id de la planta desde la card
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -36,13 +38,8 @@ const index = () => {
     setModalVisible(true);
   };
 
-  const getItems = async () => {
-    let { data } = await supabase.from("planta").select("*");
-    setPlantas(data);
-  };
-
   useEffect(() => {
-    getItems();
+    getPlantas();
   }, []);
 
   return (
@@ -69,7 +66,7 @@ const index = () => {
             numeroCosecha={planta.numero_cosecha}
             numeroSector={planta.numero_sector}
             openModal={openModal}
-            onUpdate={getItems} // Pasamos la función getItems para refrescar la lista
+            onUpdate={getPlantas} // Pasamos la función getPlantas para refrescar la lista
           />
         ))
       ) : (

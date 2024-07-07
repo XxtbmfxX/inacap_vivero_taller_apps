@@ -5,9 +5,11 @@ import ModalConfirmarDelete from "../../components/ModalConfirmarDelete";
 import Navegacion from "../../components/Navegacion";
 import CardPlantacion from "../../components/cards_de_items/CardPlantacion";
 import { supabase } from "../../lib/supabase";
+import { useItems } from "../../context/ItemsContext";
 
 const index = () => {
-  const [plantacion, setPlantacion] = useState([]);
+  const { plantacion, setPlantacion, getPlantación } = useItems();
+
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedPlantacion, setSelectedPlantacion] = useState(null);
 
@@ -38,13 +40,8 @@ const index = () => {
     setModalVisible(true);
   };
 
-  const getItems = async () => {
-    let { data } = await supabase.from("plantacion").select("*");
-    setPlantacion(data);
-  };
-
   useEffect(() => {
-    getItems();
+    getPlantación();
   }, []);
 
   return (
@@ -75,7 +72,7 @@ const index = () => {
             otrasEspecies={plantacion.otras_especies}
             openModal={openModal}
             key={plantacion.numero_cosecha}
-            onUpdate={getItems}  // Pasamos la función getItems para refrescar la lista
+            onUpdate={getPlantación} // Pasamos la función getPlantación para refrescar la lista
           />
         ))
       ) : (

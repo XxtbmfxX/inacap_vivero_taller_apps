@@ -6,9 +6,12 @@ import ModalConfirmarDelete from "../../components/ModalConfirmarDelete";
 import CardDespacho from "../../components/cards_de_items/CardDespacho";
 import Navegacion from "../../components/Navegacion";
 import { supabase } from "../../lib/supabase";
+import { useItems } from "../../context/ItemsContext";
 
 const index = () => {
-  const [despachos, setDespachos] = useState([]);
+
+   const {getDespachos, despachos, setDespachos} = useItems()
+
   const [despachoSeleccionado, setDespachoSeleccionado] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -36,13 +39,9 @@ const index = () => {
     setModalVisible(true);
   };
 
-  const getItems = async () => {
-    let { data } = await supabase.from("despacho").select("*");
-    setDespachos(data);
-  };
 
   useEffect(() => {
-    getItems();
+    getDespachos();
   }, []);
 
   return (
@@ -76,7 +75,7 @@ const index = () => {
             rutEncargado={despacho.rut_encargado}
             openModal={openModal}
             key={despacho.numero_guia_despacho}
-            onUpdate={getItems} // Pasamos la función getItems para refrescar la lista
+            onUpdate={getDespachos} // Pasamos la función getDespachos para refrescar la lista
           />
         ))
       ) : (

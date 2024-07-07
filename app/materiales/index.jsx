@@ -6,9 +6,13 @@ import Navegacion from "../../components/Navegacion";
 import CardMaterial from "../../components/cards_de_items/CardMaterial";
 
 import { supabase } from "../../lib/supabase";
+import { useItems } from "../../context/ItemsContext";
+
+
 
 const index = () => {
-  const [materiales, setMateriales] = useState([]);
+   const {materiales, setMateriales, getMateriales} = useItems()
+
   const [materialSeleccionado, setMaterialSeleccionado] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -38,13 +42,10 @@ const index = () => {
     setModalVisible(true);
   };
 
-  const getItems = async () => {
-    let { data } = await supabase.from("material").select("*");
-    setMateriales(data);
-  };
+ 
 
   useEffect(() => {
-    getItems();
+    getMateriales();
   }, []);
 
   return (
@@ -71,7 +72,7 @@ const index = () => {
             key={material.id_material}
             idMaterial={material.id_material}
             openModal={openModal}
-            onUpdate={getItems} // Pasamos la función getItems para refrescar la lista
+            onUpdate={getMateriales} // Pasamos la función getMateriales para refrescar la lista
           />
         ))
       ) : (

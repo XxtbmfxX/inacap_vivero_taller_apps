@@ -1,20 +1,45 @@
 import { ScrollView, Text } from "react-native";
-import React, { useState, useEffect } from "react";
-import Navegacion from "../../components/Navegacion";
+import React, { useEffect, useState } from "react";
 import CardTareas from "../../components/cards_de_items/CardTareas";
+import { useItems } from "../../context/ItemsContext";
+
+import ModalConfirmarDelete from "../../components/ModalConfirmarDelete";
+import Navegacion from "../../components/Navegacion";
 import { supabase } from "../../lib/supabase";
 
-const Index = () => {
-  const [tareas, setTareas] = useState([]);
 
-  // Fetch items from supabase
-  const getItems = async () => {
-    let { data } = await supabase.from("tarea").select("*").order('id_tarea', { ascending: true })
-    setTareas(data);
+const Index = () => {
+  const { tareas, getTareas, setTareas } = useItems();
+
+
+  const [tareaSeleccionada, setTareaSeleccionada] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleDelete = async () => {
+    if (tareaSeleccionada !== null) {
+      const { error } = await supabase
+        .from("tarea")
+        .delete()
+        .eq("id_tarea", tareaSeleccionada);
+
+      if (error == null) {
+        setTareas(tareas.filter(tarea => tarea.id_tarea !== setTareaSeleccionada));
+
+      }
+
+      setModalVisible(false);
+      setTareaSeleccionada(null);
+    }
   };
 
+  const openModal = (id) => {
+    setModalVisible(true);
+    setTareaSeleccionada(id);
+  };
+
+
   useEffect(() => {
-    getItems();
+    getTareas();
   }, []);
 
   return (
@@ -36,12 +61,17 @@ const Index = () => {
             nombreTarea={tarea.nombre_tarea}
             descripción={tarea.descripcion_tarea}
             idTarea={tarea.id_tarea}
-            onUpdate={getItems} // Pasamos la función getItems para refrescar la lista
+            openModal={openModal}
           />
         ))
       ) : (
         <Text>No hay elementos ＞︿＜</Text>
       )}
+        <ModalConfirmarDelete
+        visible={modalVisible}
+        onConfirm={handleDelete}
+        onCancel={() => setModalVisible(false)}
+      />
     </ScrollView>
   );
 };

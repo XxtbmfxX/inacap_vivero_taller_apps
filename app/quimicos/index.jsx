@@ -7,9 +7,13 @@ import Navegacion from "../../components/Navegacion";
 import ModalConfirmarDelete from "../../components/ModalConfirmarDelete";
 
 import { supabase } from "../../lib/supabase";
+import { useItems } from "../../context/ItemsContext";
 
 const index = () => {
-  const [químicos, setQuímicos] = useState([]);
+  
+  const {químicos, setQuímicos, getQuímicos } = useItems();
+
+
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedQuimico, setSelectedQuimico] = useState(null);
 
@@ -34,13 +38,10 @@ const index = () => {
     setModalVisible(true);
   };
 
-  const getItems = async () => {
-    let { data } = await supabase.from("quimico").select("*").order('fecha_ingreso')
-    setQuímicos(data);
-  };
+  
 
   useEffect(() => {
-    getItems();
+    getQuímicos();
   }, []);
 
   return (
@@ -72,7 +73,7 @@ const index = () => {
             id={quimico.id}
             openModal={openModal}
             key={quimico.id}
-            onUpdate={getItems}
+            onUpdate={getQuímicos}
           />
         ))
       ) : (

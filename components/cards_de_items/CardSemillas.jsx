@@ -1,6 +1,6 @@
 import { View, Text } from "react-native";
 import React from "react";
-import { Card } from "@rneui/base";
+import { Button, Card } from "@rneui/base";
 
 const CardSemillas = ({
   codigoBolsa = "123",
@@ -15,9 +15,16 @@ const CardSemillas = ({
   idProcedencia = "P001",
   idBodega = "B001",
   rutColector = "12345678-9",
+  openModal
 }) => {
   return (
     <Card containerStyle={{ padding: 0, borderRadius: 15, width: 300 }}>
+          <Button
+              buttonStyle={{ backgroundColor: "red" }}
+              onPress={() => openModal(codigoBolsa)}
+            >
+              Eliminar
+            </Button>
       <View style={{ backgroundColor: "lightgray", padding: 15 }}>
         <View style={{ marginBottom: 10 }}>
           <Text style={{ fontSize: 18, fontWeight: "bold" }}>

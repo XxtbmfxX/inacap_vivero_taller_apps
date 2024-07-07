@@ -12,7 +12,7 @@ const CardPlantacion = ({
   nombreColector,
   openModal,
   onUpdate,
-  otrasEspecies
+  otrasEspecies,
 }) => {
   const [editMode, setEditMode] = useState(false);
   const [newPlantacion, setNewPlantacion] = useState(plantacion);
@@ -23,15 +23,14 @@ const CardPlantacion = ({
 
   const handleUpdate = async () => {
     const { error } = await supabase
-      .from('plantacion')
+      .from("plantacion")
       .update({
-        plantacion: newPlantacion,
         fecha_inicio: newFechaInicio,
         fecha_cosecha: newFechaCosecha,
-        otras_especies: newEspecies.split(",").map(e => e.trim()),
+        otras_especies: newEspecies.split(",").map((e) => e.trim()),
         nombre_colector: newNombreColector,
       })
-      .eq('numero_cosecha', numeroCosecha);
+      .eq("numero_cosecha", numeroCosecha);
 
     if (!error) {
       onUpdate();
@@ -47,12 +46,6 @@ const CardPlantacion = ({
       <View style={styles.cardContainer}>
         {editMode ? (
           <>
-            <TextInput
-              style={styles.input}
-              value={newPlantacion}
-              onChangeText={setNewPlantacion}
-              placeholder="Plantación"
-            />
             <TextInput
               style={styles.input}
               value={newFechaInicio}
@@ -89,7 +82,9 @@ const CardPlantacion = ({
               Eliminar
             </Button>
             <View style={styles.header}>
-              <Card.Title style={styles.title}>Plantación: {plantacion}</Card.Title>
+              <Card.Title style={styles.title}>
+                Plantación: {plantacion}
+              </Card.Title>
               <Text style={styles.text}>id: {numeroCosecha}</Text>
               <Text style={styles.text}>Fecha Inicio: {fechaInicio}</Text>
               <Text style={styles.text}>Fecha Termino: {fechaCosecha}</Text>
@@ -98,7 +93,9 @@ const CardPlantacion = ({
             <View style={styles.especiesContainer}>
               <Text style={styles.especieText}>{otrasEspecies.join(", ")}</Text>
             </View>
-            <Text style={styles.text}>Nombre del Colector: {nombreColector}</Text>
+            <Text style={styles.text}>
+              Nombre del Colector: {nombreColector}
+            </Text>
             <Text style={styles.text}>Número Cosecha: {numeroCosecha}</Text>
             <Button title="Actualizar" onPress={() => setEditMode(true)} />
           </>
@@ -110,16 +107,16 @@ const CardPlantacion = ({
 
 const styles = StyleSheet.create({
   cardContainer: {
-    alignItems: 'flex-start',
-    backgroundColor: 'lightgray',
+    alignItems: "flex-start",
+    backgroundColor: "lightgray",
     borderRadius: 15,
     padding: 10,
     width: 350,
-    justifyContent: 'space-between'
+    justifyContent: "space-between",
   },
   header: {
     flex: 1,
-    alignItems: 'flex-start',
+    alignItems: "flex-start",
   },
   title: {
     marginBottom: 5,
@@ -128,23 +125,23 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   subtitle: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 5,
   },
   especiesContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   especieText: {
     marginRight: 20,
   },
   input: {
     height: 40,
-    borderColor: 'gray',
+    borderColor: "gray",
     borderWidth: 1,
     marginBottom: 10,
     paddingHorizontal: 10,
     borderRadius: 5,
-    width: '100%',
+    width: "100%",
   },
 });
 

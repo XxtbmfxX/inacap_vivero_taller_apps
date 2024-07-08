@@ -8,7 +8,7 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
-import { Picker } from '@react-native-picker/picker';
+// import { Picker } from '@react-native-picker/picker';
 import { validarFormularioPlanta } from "./validaciones";
 import { supabase } from "../../lib/supabase";
 import { useItems } from "../../context/ItemsContext";
@@ -89,7 +89,7 @@ const add_planta = () => {
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
         <Text style={styles.title}>Agregar Plantas</Text>
-        <Picker
+        {/* <Picker
           selectedValue={especie}
           onValueChange={(itemValue, itemIndex) => setEspecie(itemValue)}
           style={styles.input}
@@ -102,7 +102,7 @@ const add_planta = () => {
               value={especie.nombre_especie}
             />
           ))}
-        </Picker>
+        </Picker> */}
         {errores.especie && (
           <Text style={styles.errorText}>{errores.especie}</Text>
         )}

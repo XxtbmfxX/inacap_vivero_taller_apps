@@ -24,7 +24,6 @@ const index = () => {
         <ItemsCard titulo="Materiales" screen="materiales" />
         <ItemsCard titulo="Plantas" screen="plan-tas" />
         <ItemsCard titulo="Tareas" screen="tareas" />
-        <ItemsCard titulo="Trabajadores" screen="trabajadores" />
       </View>
     </View>
   );

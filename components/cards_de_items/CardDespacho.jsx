@@ -2,7 +2,27 @@ import { View, Text, TextInput, StyleSheet } from "react-native";
 import React, { useState } from "react";
 import { Card, Button } from "@rneui/base";
 import { supabase } from "../../lib/supabase";
-import { formatDate } from "../../lib/utils";
+
+
+/**
+ * Componente de tarjeta para mostrar y editar información de despachos.
+ *
+ * @param {Object} props - Las propiedades del componente.
+ * @param {string} props.numeroGuiaDespacho - El número de la guía de despacho.
+ * @param {string} props.observaciones - Las observaciones del despacho.
+ * @param {number} props.numeroDeSemanas - El número de semanas del despacho.
+ * @param {string} props.predio - El predio del despacho.
+ * @param {number} props.cantidadDePlantas - La cantidad de plantas del despacho.
+ * @param {string} props.fechaRetiro - La fecha de retiro del despacho.
+ * @param {string} props.fechaSolicitud - La fecha de solicitud del despacho.
+ * @param {number} props.idComuna - El ID de la comuna del despacho.
+ * @param {number} props.idBeneficiario - El ID del beneficiario del despacho.
+ * @param {number} props.idPrograma - El ID del programa del despacho.
+ * @param {string} props.rutEncargado - El RUT del encargado del despacho.
+ * @param {Function} props.openModal - Función para abrir el modal de eliminación.
+ * @param {Function} props.onUpdate - Función para llamar cuando se actualiza el despacho.
+ */
+
 
 const CardDespacho = ({
   numeroGuiaDespacho,

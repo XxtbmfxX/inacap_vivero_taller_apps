@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: CardQuimicos.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: CardQuimicos.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { View, Text, TextInput, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import { Button, Card } from "@rneui/base";
+import { supabase } from "../../lib/supabase";
+import { formatDate } from "../../lib/utils";
+
+
+/**
+ * Componente de tarjeta para mostrar y editar información de químicos.
+ *
+ * @param {Object} props - Las propiedades del componente.
+ * @param {string} props.fechaIngreso - La fecha de ingreso del químico.
+ * @param {number} props.cantidad - La cantidad del químico.
+ * @param {string} props.contenido - El contenido del químico.
+ * @param {string} props.categoria - La categoría del químico.
+ * @param {string} props.presentacion - La presentación del químico.
+ * @param {number} props.stockMinimo - El stock mínimo del químico.
+ * @param {string} props.nombre - El nombre del químico.
+ * @param {number} props.id - El ID del químico.
+ * @param {Function} props.onUpdate - Función para llamar cuando se actualiza el químico.
+ * @param {Function} props.openModal - Función para abrir el modal de eliminación.
+ * @returns {JSX.Element} El componente de tarjeta de químicos.
+ */
+
+const CardQuimicos = ({
+  fechaIngreso,
+  cantidad,
+  contenido,
+  categoria,
+  presentacion,
+  stockMinimo,
+  nombre,
+  id,
+  onUpdate,
+  openModal,
+}) => {
+  const [editMode, setEditMode] = useState(false);
+  const [newNombre, setNewNombre] = useState(nombre);
+  const [newCantidad, setNewCantidad] = useState(cantidad);
+  const [newContenido, setNewContenido] = useState(contenido);
+  const [newCategoria, setNewCategoria] = useState(categoria);
+  const [newPresentacion, setNewPresentacion] = useState(presentacion);
+  const [newStockMinimo, setNewStockMinimo] = useState(stockMinimo);
+
+  /**
+   * Maneja la actualización del químico en la base de datos.
+   */
+
+  const handleUpdate = async () => {
+    const { error } = await supabase
+      .from('quimico')
+      .update({
+        nombre: newNombre,
+        cantidad: newCantidad,
+        contenido: newContenido,
+        categoria: newCategoria,
+        presentacion: newPresentacion,
+        stock_minimo: newStockMinimo,
+      })
+      .eq('id', id);
+
+    if (!error) {
+      onUpdate();
+      setEditMode(false);
+    } else {
+      console.log(error.message);
+    }
+  };
+
+  return (
+    &lt;>
+      &lt;Card.Divider />
+      &lt;View style={styles.cardContainer}>
+        {editMode ? (
+          &lt;>
+            &lt;TextInput
+              style={styles.input}
+              value={newNombre}
+              onChangeText={setNewNombre}
+              placeholder="Nombre"
+            />
+            &lt;TextInput
+              style={styles.input}
+              value={newCantidad}
+              onChangeText={setNewCantidad}
+              placeholder="Cantidad"
+              keyboardType="numeric"
+            />
+            &lt;TextInput
+              style={styles.input}
+              value={newContenido}
+              onChangeText={setNewContenido}
+              placeholder="Contenido"
+            />
+            &lt;TextInput
+              style={styles.input}
+              value={newCategoria}
+              onChangeText={setNewCategoria}
+              placeholder="Categoría"
+            />
+            &lt;TextInput
+              style={styles.input}
+              value={newPresentacion}
+              onChangeText={setNewPresentacion}
+              placeholder="Presentación"
+            />
+            &lt;TextInput
+              style={styles.input}
+              value={newStockMinimo}
+              onChangeText={setNewStockMinimo}
+              placeholder="Stock Mínimo"
+              keyboardType="numeric"
+            />
+            &lt;Button title="Guardar" onPress={handleUpdate} />
+            &lt;Button title="Cancelar" onPress={() => setEditMode(false)} />
+          &lt;/>
+        ) : (
+          &lt;>
+            &lt;Button
+              buttonStyle={{ backgroundColor: "red" }}
+              onPress={() => openModal({ id: id })}
+            >
+              Eliminar
+            &lt;/Button>
+
+            &lt;View style={styles.header}>
+              &lt;Text style={styles.contenido}>id: {id}&lt;/Text>
+              &lt;Text style={styles.contenido}>Contenido: {contenido}&lt;/Text>
+              &lt;Text style={styles.contenido}>Nombre: {nombre}&lt;/Text>
+            &lt;/View>
+            &lt;Text style={styles.fechaIngreso}>
+              Fecha Ingreso: {formatDate(fechaIngreso)}
+            &lt;/Text>
+            &lt;View style={styles.categoryPresentation}>
+              &lt;Text style={styles.text}>Categoría: {categoria}&lt;/Text>
+            &lt;/View>
+            &lt;Text style={styles.text}>Presentación: {presentacion}&lt;/Text>
+            &lt;View style={styles.details}>
+              &lt;Text style={styles.text}>Cantidad: {cantidad}&lt;/Text>
+              &lt;Text style={styles.text}>Stock Mínimo: {stockMinimo}&lt;/Text>
+            &lt;/View>
+            &lt;Button title="Actualizar" onPress={() => setEditMode(true)} />
+          &lt;/>
+        )}
+      &lt;/View>
+    &lt;/>
+  );
+};
+
+const styles = StyleSheet.create({
+  cardContainer: {
+    alignItems: "flex-start",
+    backgroundColor: "lightgray",
+    width: 350,
+    padding: 15,
+    borderRadius: 15,
+    marginBottom: 15,
+    gap: 10,
+  },
+  header: {
+    justifyContent: "space-between",
+    alignItems: "baseline",
+    marginBottom: 20,
+    gap: 20,
+  },
+  contenido: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  fechaIngreso: {
+    fontSize: 16,
+  },
+  categoryPresentation: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  text: {
+    fontSize: 16,
+  },
+  details: {
+    justifyContent: "space-between",
+  },
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+    width: '100%',
+  },
+});
+
+export default CardQuimicos;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#CardDespacho">CardDespacho</a></li><li><a href="global.html#CardQuimicos">CardQuimicos</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Sun Jul 07 2024 21:28:50 GMT-0400 (hora estándar de Chile)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -2,19 +2,16 @@ import { useState, useEffect } from "react";
 import { supabase } from "../../lib/supabase";
 import { StyleSheet, View, Alert } from "react-native";
 import { Button, Input } from "@rneui/themed";
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from "../../context/AuthContext";
 
 export default function Account() {
   const [loading, setLoading] = useState(false);
 
   const { session, manageLogout } = useAuth();
 
-
   const [username, setUsername] = useState("");
   const [website, setWebsite] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
-  
-
 
   useEffect(() => {
     if (session) getProfile();
@@ -85,13 +82,6 @@ export default function Account() {
           label="Nombre de usuario"
           value={username || ""}
           onChangeText={(text) => setUsername(text)}
-        />
-      </View>
-      <View style={styles.verticallySpaced}>
-        <Input
-          label="Página web"
-          value={website || ""}
-          onChangeText={(text) => setWebsite(text)}
         />
       </View>
 

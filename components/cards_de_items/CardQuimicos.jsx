@@ -4,6 +4,24 @@ import { Button, Card } from "@rneui/base";
 import { supabase } from "../../lib/supabase";
 import { formatDate } from "../../lib/utils";
 
+
+/**
+ * Componente de tarjeta para mostrar y editar información de químicos.
+ *
+ * @param {Object} props - Las propiedades del componente.
+ * @param {string} props.fechaIngreso - La fecha de ingreso del químico.
+ * @param {number} props.cantidad - La cantidad del químico.
+ * @param {string} props.contenido - El contenido del químico.
+ * @param {string} props.categoria - La categoría del químico.
+ * @param {string} props.presentacion - La presentación del químico.
+ * @param {number} props.stockMinimo - El stock mínimo del químico.
+ * @param {string} props.nombre - El nombre del químico.
+ * @param {number} props.id - El ID del químico.
+ * @param {Function} props.onUpdate - Función para llamar cuando se actualiza el químico.
+ * @param {Function} props.openModal - Función para abrir el modal de eliminación.
+ * @returns {JSX.Element} El componente de tarjeta de químicos.
+ */
+
 const CardQuimicos = ({
   fechaIngreso,
   cantidad,
@@ -23,6 +41,10 @@ const CardQuimicos = ({
   const [newCategoria, setNewCategoria] = useState(categoria);
   const [newPresentacion, setNewPresentacion] = useState(presentacion);
   const [newStockMinimo, setNewStockMinimo] = useState(stockMinimo);
+
+  /**
+   * Maneja la actualización del químico en la base de datos.
+   */
 
   const handleUpdate = async () => {
     const { error } = await supabase

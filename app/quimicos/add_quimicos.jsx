@@ -45,12 +45,12 @@ const AgregarQuimicosForm = () => {
         cantidad: quimico.cantidad,
         id_etiqueta: quimico.etiqueta,
       },
-    ]);
+    ]).select();
 
     if (error) {
-      console.error("Error al añadir tarea:", error);
+      console.error("Error al añadir quimico:", error);
       setErrores({
-        general: "Error al añadir la tarea. Por favor, inténtalo de nuevo.",
+        general: "Error al añadir la quimico. Por favor, inténtalo de nuevo.",
       });
     } else {
       getQuímicos();

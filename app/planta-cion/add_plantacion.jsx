@@ -50,7 +50,7 @@ const AddPlantacion = () => {
         numero_cosecha: plantacion.numeroCosecha,
         nombre_colector: plantacion.nombreColector,
       },
-    ]);
+    ]).select();
 
     if (error) {
       console.error("Error al añadir plantación:", error);

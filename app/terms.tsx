@@ -25,6 +25,10 @@ export default function TermsAndConditions() {
         <Text style={styles.paragraph}>
           4. Limitación de responsabilidad: No nos hacemos responsables de cualquier daño directo, indirecto, incidental o consecuente que resulte del uso de nuestro servicio.
         </Text>
+        <Text style={styles.title}>Uso de información</Text>
+        <Text style={styles.paragraph}>
+          Seguir normativa iso para manejar la información
+        </Text>
       </ScrollView>
       <Button 
         title="Volver" 

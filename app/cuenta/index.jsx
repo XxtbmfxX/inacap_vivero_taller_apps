@@ -3,15 +3,17 @@ import { supabase } from "../../lib/supabase";
 import { StyleSheet, View, Alert } from "react-native";
 import { Button, Input } from "@rneui/themed";
 import { useAuth } from "../../context/AuthContext";
+import { router } from "expo-router";
+import { ScrollView } from "react-native";
 
 export default function Account() {
   const [loading, setLoading] = useState(false);
-
-  const { session, manageLogout } = useAuth();
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  
+  const { session, manageLogout, setSession } = useAuth();
 
   const [username, setUsername] = useState("");
-  const [website, setWebsite] = useState("");
-  const [avatarUrl, setAvatarUrl] = useState("");
 
   useEffect(() => {
     if (session) getProfile();
@@ -24,7 +26,7 @@ export default function Account() {
 
       const { data, error, status } = await supabase
         .from("usuario")
-        .select(`username, website, avatar_url`)
+        .select(`username`)
         .eq("id", session?.user.id)
         .single();
       if (error && status !== 406) {
@@ -33,8 +35,6 @@ export default function Account() {
 
       if (data) {
         setUsername(data.username);
-        setWebsite(data.website);
-        setAvatarUrl(data.avatar_url);
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -45,16 +45,14 @@ export default function Account() {
     }
   }
 
-  async function updateProfile({ username, website, avatar_url }) {
+  async function updateProfile({ username }) {
     try {
       setLoading(true);
-      if (!session?.user) throw new Error("No user on the session!");
+      if (!session?.user) throw new Error("No hay sesión de usuario!");
 
       const updates = {
         id: session?.user.id,
         username,
-        website,
-        avatar_url,
         updated_at: new Date(),
       };
 
@@ -72,8 +70,39 @@ export default function Account() {
     }
   }
 
+  async function changePassword() {
+    if (newPassword !== confirmPassword) {
+      Alert.alert("Las contraseñas no coinciden");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword,
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      Alert.alert("Contraseña actualizada con éxito");
+      setNewPassword("");
+      setConfirmPassword("");
+      setSession(null)
+      router.navigate("/")
+
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert(error.message);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Input label="Email" value={session?.user?.email} disabled />
       </View>
@@ -85,12 +114,35 @@ export default function Account() {
         />
       </View>
 
+      <View style={styles.verticallySpaced}>
+        <Input
+          label="Nueva Contraseña"
+          value={newPassword}
+          onChangeText={(text) => setNewPassword(text)}
+          secureTextEntry
+        />
+      </View>
+      <View style={styles.verticallySpaced}>
+        <Input
+          label="Confirmar Nueva Contraseña"
+          value={confirmPassword}
+          onChangeText={(text) => setConfirmPassword(text)}
+          secureTextEntry
+        />
+      </View>
+
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Button
           title={loading ? "Cargando ..." : "Actualizar"}
-          onPress={() =>
-            updateProfile({ username, website, avatar_url: avatarUrl })
-          }
+          onPress={() => updateProfile({ username })}
+          disabled={loading}
+        />
+      </View>
+
+      <View style={styles.verticallySpaced}>
+        <Button
+          title={loading ? "Cargando ..." : "Cambiar Contraseña"}
+          onPress={changePassword}
           disabled={loading}
         />
       </View>
@@ -98,7 +150,7 @@ export default function Account() {
       <View style={styles.verticallySpaced}>
         <Button title="Cerrar Sesión" onPress={manageLogout} />
       </View>
-    </View>
+    </ScrollView>
   );
 }
 

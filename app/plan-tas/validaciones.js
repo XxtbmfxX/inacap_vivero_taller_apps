@@ -10,14 +10,11 @@ export const validarEspecie = (especie) => {
   return '';
 };
 
-export const validarAñoDespacho = (añoDespacho) => {
-  if (!añoDespacho || añoDespacho.trim().length === 0) {
+export const validarFechaDespacho = (fechaDespacho) => {
+  if (!fechaDespacho || fechaDespacho.trim().length === 0) {
     return 'El año de despacho es obligatorio.';
   }
 
-  if (!/^\d{4}$/.test(añoDespacho)) {
-    return 'El año de despacho debe ser un año válido.';
-  }
 
   return '';
 };
@@ -46,7 +43,24 @@ export const validarNumeroPlatabanda = (numeroPlatabanda) => {
   return '';
 };
 
-export const validarFormularioPlanta = (especie, añoDespacho, numeroSector, numeroPlatabanda) => {
+export const validarNumeroCosecha = (numeroCosecha) => {
+  if (!numeroCosecha || numeroCosecha.trim().length === 0) {
+    return 'El número de cosecha es obligatorio.';
+  }
+
+  return '';
+};
+
+
+
+export const validarFormularioPlanta = (
+  especie,
+  numeroCosecha,
+  numeroPlatabanda,
+  fechaDespacho,
+  numeroSector
+
+) => {
   const errores = {};
 
   const errorEspecie = validarEspecie(especie);
@@ -54,9 +68,9 @@ export const validarFormularioPlanta = (especie, añoDespacho, numeroSector, num
     errores.especie = errorEspecie;
   }
 
-  const errorAñoDespacho = validarAñoDespacho(añoDespacho);
-  if (errorAñoDespacho) {
-    errores.añoDespacho = errorAñoDespacho;
+  const errorFechaDespacho = validarFechaDespacho(fechaDespacho);
+  if (errorFechaDespacho) {
+    errores.fechaDespacho = errorFechaDespacho;
   }
 
   const errorNumeroSector = validarNumeroSector(numeroSector);
@@ -67,6 +81,11 @@ export const validarFormularioPlanta = (especie, añoDespacho, numeroSector, num
   const errorNumeroPlatabanda = validarNumeroPlatabanda(numeroPlatabanda);
   if (errorNumeroPlatabanda) {
     errores.numeroPlatabanda = errorNumeroPlatabanda;
+  }
+
+  const errorNumeroCosecha = validarNumeroCosecha(numeroCosecha);
+  if (errorNumeroCosecha) {
+    errores.numeroCosecha = errorNumeroCosecha;
   }
 
   return errores;

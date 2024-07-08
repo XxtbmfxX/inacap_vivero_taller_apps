@@ -30,7 +30,7 @@ const IngresarMaterialesForm = () => {
         nombre_material: nombreMaterial,
         unidad_medida: unidadDeMedida,
         cantidad: cantidadMaterial
-      }]);
+      }]).select();
 
     if (error) {
       console.error("Error al añadir material: ", error);

@@ -1,39 +1,68 @@
-export const validarNombreSemilla = (nombre) => {
-  if (!nombre || nombre.trim().length === 0) {
-    return 'El nombre de la semilla es obligatorio.';
+export const validarCodigoBolsa = (codigoBolsa) => {
+  if (!codigoBolsa || codigoBolsa.trim().length === 0) {
+    return 'El código de bolsa es obligatorio.';
   }
 
-  if (nombre.length < 3) {
-    return 'El nombre de la semilla debe tener al menos 3 caracteres.';
-  }
 
   return '';
 };
 
-export const validarDescripcionSemilla = (descripcion) => {
-  if (!descripcion || descripcion.trim().length === 0) {
-    return 'La descripción de la semilla es obligatoria.';
+export const validarCantidad = (cantidad) => {
+  if (!cantidad || isNaN(cantidad)) {
+    return 'La cantidad debe ser un número entero.';
   }
 
-  if (descripcion.length < 10) {
-    return 'La descripción de la semilla debe tener al menos 10 caracteres.';
-  }
 
   return '';
 };
 
-export const validarFormularioSemilla = (nombre, descripcion) => {
+export const validarFecha = (fecha) => {
+  if (!fecha) {
+    return 'La fecha es obligatoria.';
+  }
+
+
+  return '';
+};
+
+export const validarPorcentajeGerminacion = (porcentaje) => {
+  if (!porcentaje || porcentaje.trim().length === 0) {
+    return 'El porcentaje de germinación es obligatorio.';
+  }
+
+
+  return '';
+};
+
+
+export const validarFormularioSemilla = (semillas) => {
   const errores = {};
 
-  const errorNombre = validarNombreSemilla(nombre);
-  if (errorNombre) {
-    errores.nombre = errorNombre;
+  const errorCodigoBolsa = validarCodigoBolsa(semillas.codigoBolsa);
+  if (errorCodigoBolsa) {
+    errores.codigoBolsa = errorCodigoBolsa;
   }
 
-  const errorDescripcion = validarDescripcionSemilla(descripcion);
-  if (errorDescripcion) {
-    errores.descripcion = errorDescripcion;
+  const errorCantidad = validarCantidad(semillas.cantidad);
+  if (errorCantidad) {
+    errores.cantidad = errorCantidad;
   }
 
-  return errores;
+  const errorFechaRecepcion = validarFecha(semillas.fechaRecepcion);
+  if (errorFechaRecepcion) {
+    errores.fechaRecepcion = errorFechaRecepcion;
+  }
+
+  const errorFechaColecta = validarFecha(semillas.fechaColecta);
+  if (errorFechaColecta) {
+    errores.fechaColecta = errorFechaColecta;
+  }
+
+  const errorPorcentajeGerminacion = validarPorcentajeGerminacion(semillas.porcentajeGerminacion);
+  if (errorPorcentajeGerminacion) {
+    errores.porcentajeGerminacion = errorPorcentajeGerminacion;
+  }
+
+
+  return errores ;
 };

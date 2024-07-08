@@ -1,4 +1,4 @@
-import { useRouter } from "expo-router";
+import { router } from "expo-router";
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -8,43 +8,78 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
-// import { Picker } from '@react-native-picker/picker';
+import { Picker } from "@react-native-picker/picker";
 import { validarFormularioPlanta } from "./validaciones";
 import { supabase } from "../../lib/supabase";
 import { useItems } from "../../context/ItemsContext";
 
 const add_planta = () => {
   const { getPlantas } = useItems();
+
   const [especie, setEspecie] = useState("");
   const [especies, setEspecies] = useState([]);
-  const [numeroPlatabanda, setNumeroPlatabanda] = useState("");
-  const [añoDespacho, setAñoDespacho] = useState("");
+
+  const [numeroCosechas, setNumeroCosechas] = useState([]);
+  const [numeroCosecha, setNumeroCosecha] = useState("");
+
+  const [numeroSectores, setNumeroSectores] = useState([]);
   const [numeroSector, setNumeroSector] = useState("");
+
+  const [numeroPlatabanda, setNumeroPlatabanda] = useState("20");
+  const [fechaDespacho, setFechaDespacho] = useState("2022-02-02");
+
   const [errores, setErrores] = useState({});
-  const router = useRouter();
+
+  const cargarEspecies = async () => {
+    const { data, error } = await supabase
+      .from("especie")
+      .select("id_especie, nombre_especie");
+
+    if (error) {
+      console.error("Error al cargar especies:", error);
+    } else {
+      setEspecies(data);
+    }
+  };
+
+  const cargarNumeroCosechas = async () => {
+    const { data, error } = await supabase
+      .from("plantacion")
+      .select("numero_cosecha");
+
+    if (error) {
+      console.error("Error al cargar cosecha:", error);
+    } else {
+      setNumeroCosechas(data);
+    }
+  };
+
+  const cargarNumeroSectores = async () => {
+    const { data, error } = await supabase
+      .from("sector")
+      .select("numero_sector");
+
+    if (error) {
+      console.error("Error al cargar sector:", error);
+    } else {
+      setNumeroSectores(data);
+    }
+  };
+
 
   useEffect(() => {
-    const cargarEspecies = async () => {
-      const { data, error } = await supabase
-        .from("especie")
-        .select("id_especie, nombre_especie");
-
-      if (error) {
-        console.error("Error al cargar especies:", error);
-      } else {
-        setEspecies(data);
-      }
-    };
-
+    cargarNumeroCosechas();
     cargarEspecies();
+    cargarNumeroSectores()
   }, []);
 
   const handleSubmit = async () => {
     const erroresValidacion = validarFormularioPlanta(
       especie,
-      añoDespacho,
+      numeroPlatabanda,
+      numeroCosecha,
       numeroSector,
-      numeroPlatabanda
+      fechaDespacho
     );
     if (Object.keys(erroresValidacion).length > 0) {
       setErrores(erroresValidacion);
@@ -61,24 +96,64 @@ const add_planta = () => {
 
     if (especieError || !especieData) {
       console.error("Error al obtener el id de la especie:", especieError);
-      setErrores({ general: "Error al obtener el id de la especie. Por favor, inténtalo de nuevo." });
+      setErrores({
+        general:
+          "Error al obtener el id de la especie. Por favor, inténtalo de nuevo.",
+      });
       return;
     }
 
-    const id_especie = especieData.id_especie;
+    const { data: plantacionData, error: plantacionError } = await supabase
+      .from("plantacion")
+      .select("numero_cosecha")
+      .eq("numero_cosecha", numeroCosecha)
+      .single();
 
-    const { data, error } = await supabase
-      .from("planta")
-      .insert([{
-        id_especie,
-        anio_despacho: añoDespacho,
+    if (plantacionError || !plantacionData) {
+      console.error(
+        "Error al obtener el id de la plantación:",
+        plantacionError
+      );
+      setErrores({
+        general:
+          "Error al obtener el id de la plantación. Por favor, inténtalo de nuevo.",
+      });
+      return;
+    }
+
+    const { data: sectorData, error: sectorError } = await supabase
+      .from("plantacion")
+      .select("numero_cosecha")
+      .eq("numero_cosecha", numeroCosecha)
+      .single();
+
+    if (sectorError || !sectorData) {
+      console.error(
+        "Error al obtener el id de la plantación:",
+        sectorError
+      );
+      setErrores({
+        general:
+          "Error al obtener el id de la plantación. Por favor, inténtalo de nuevo.",
+      });
+      return;
+    }
+
+    const { data, error } = await supabase.from("planta").insert([
+      {
         numero_platabanda: numeroPlatabanda,
+        id_especie: especieData.id_especie,
+        numero_cosecha: numeroCosecha,
         numero_sector: numeroSector,
-      }]);
+        fecha_despacho: new Date(fechaDespacho),
+      },
+    ]);
 
     if (error) {
       console.error("Error al añadir planta:", error);
-      setErrores({ general: "Error al añadir la planta. Por favor, inténtalo de nuevo." });
+      setErrores({
+        general: "Error al añadir la planta. Por favor, inténtalo de nuevo.",
+      });
     } else {
       getPlantas();
       router.back();
@@ -89,9 +164,10 @@ const add_planta = () => {
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
         <Text style={styles.title}>Agregar Plantas</Text>
-        {/* <Picker
+
+        <Picker
           selectedValue={especie}
-          onValueChange={(itemValue, itemIndex) => setEspecie(itemValue)}
+          onValueChange={(itemValue) => setEspecie(itemValue)}
           style={styles.input}
         >
           <Picker.Item label="Seleccione una especie" value="" />
@@ -102,28 +178,68 @@ const add_planta = () => {
               value={especie.nombre_especie}
             />
           ))}
-        </Picker> */}
+        </Picker>
         {errores.especie && (
           <Text style={styles.errorText}>{errores.especie}</Text>
         )}
+
+        <Picker
+          selectedValue={numeroCosecha}
+          onValueChange={(itemValue) => setNumeroCosecha(itemValue)}
+          style={styles.input}
+        >
+          <Picker.Item label="Seleccione una cosecha" value="" />
+          {numeroCosechas.map((cosecha) => (
+            <Picker.Item
+              key={cosecha.numero_cosecha}
+              label={cosecha.numero_cosecha}
+              value={cosecha.numero_cosecha}
+            />
+          ))}
+        </Picker>
+        {errores.numeroCosecha && (
+          <Text style={styles.errorText}>{errores.numeroCosecha}</Text>
+        )}
+
+        <Picker
+          selectedValue={numeroSector}
+          onValueChange={(itemValue) => setNumeroSector(itemValue)}
+          style={styles.input}
+        >
+          <Picker.Item label="Seleccione un sector" value="" />
+          {numeroSectores.map((sector) => (
+            <Picker.Item
+              key={sector.numero_sector}
+              label={sector.numero_sector}
+              value={sector.numero_sector}
+            />
+          ))}
+        </Picker>
+        {errores.numeroSector && (
+          <Text style={styles.errorText}>{errores.numeroSector}</Text>
+        )}
+
+
         <TextInput
           style={styles.input}
           placeholder="Año de Despacho"
-          value={añoDespacho}
-          onChangeText={setAñoDespacho}
-          keyboardType="numeric"
+          value={fechaDespacho}
+          onChangeText={setFechaDespacho}
+          keyboardType="text"
         />
-        {errores.añoDespacho && (
-          <Text style={styles.errorText}>{errores.añoDespacho}</Text>
+        {errores.fechaDespacho && (
+          <Text style={styles.errorText}>{errores.fechaDespacho}</Text>
         )}
+
         <TextInput
           style={styles.input}
-          placeholder="Número de Sector"
-          value={numeroSector}
-          onChangeText={setNumeroSector}
+          placeholder="Número de Cosecha"
+          value={numeroCosecha}
+          onChangeText={setNumeroCosecha}
+          keyboardType="numeric"
         />
-        {errores.numeroSector && (
-          <Text style={styles.errorText}>{errores.numeroSector}</Text>
+        {errores.numeroCosecha && (
+          <Text style={styles.errorText}>{errores.numeroCosecha}</Text>
         )}
         <TextInput
           style={styles.input}

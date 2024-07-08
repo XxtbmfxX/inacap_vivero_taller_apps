@@ -3,6 +3,18 @@ import React, { Children, useState } from "react";
 import { Button, Card } from "@rneui/base";
 import { supabase } from "../../lib/supabase";
 
+
+/**
+ * Componente de tarjeta para mostrar detalles de una tarea.
+ * @param {object} props Propiedades del componente.
+ * @param {string} props.nombreTarea Nombre de la tarea.
+ * @param {string} props.descripción Descripción de la tarea.
+ * @param {number} props.idTarea ID único de la tarea.
+ * @param {Function} props.onUpdate Función para actualizar la tarea.
+ * @param {Function} props.openModal Función para abrir un modal para eliminar la tarea.
+ * @returns {JSX.Element} Elemento de tarjeta que muestra detalles de la tarea y permite editar o eliminar.
+ */
+
 const CardTareas = ({
   nombreTarea,
   descripción,
@@ -13,6 +25,12 @@ const CardTareas = ({
   const [editMode, setEditMode] = useState(false);
   const [newNombreTarea, setNewNombreTarea] = useState(nombreTarea);
   const [newDescripcion, setNewDescripcion] = useState(descripción);
+
+
+   /**
+   * Maneja la actualización de la tarea en la base de datos.
+   * Actualiza el nombre y la descripción de la tarea.
+   */
 
   const handleUpdate = async () => {
     const { error } = await supabase

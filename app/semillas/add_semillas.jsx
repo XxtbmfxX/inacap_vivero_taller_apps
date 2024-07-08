@@ -12,6 +12,22 @@ import { supabase } from "../../lib/supabase";
 import { useItems } from "../../context/ItemsContext";
 import { router } from "expo-router";
 
+/**
+ * Componente add_semillas que muestra una lista de semillas con la capacidad de agregar y eliminar.
+ *
+ * @component
+ * @returns {JSX.Element} El componente renderizado.
+ *
+ * @function handleDelete
+ * Maneja la eliminación de una semilla seleccionado.
+ *
+ * @function openModal
+ * Abre el modal de confirmación de eliminación.
+ *
+ * @function useEffect
+ * Obtiene los semillas al montar el componente.
+ */
+
 const add_semillas = () => {
   const { getSemillas } = useItems();
 

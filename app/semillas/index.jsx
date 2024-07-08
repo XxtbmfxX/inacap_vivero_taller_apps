@@ -9,6 +9,25 @@ import Navegacion from "../../components/Navegacion";
 import { supabase } from "../../lib/supabase";
 import { useItems } from "../../context/ItemsContext";
 
+/**
+ * Componente Index que muestra una lista de semillas con la capacidad de agregar y eliminar.
+ *
+ * @componente
+ * @returns {JSX.Element} El componente renderizado.
+ *
+ * @función handleDelete
+ * Maneja la eliminación de una semilla seleccionada.
+ *
+ * @función openModal
+ * Abre el modal de confirmación de eliminación.
+ *
+ * @función handleUpdate
+ * Maneja la actualización de la lista de semillas.
+ *
+ * @función useEffect
+ * Obtiene las semillas al montar el componente.
+ */
+
 const Index = () => {
   const { semillas, getSemillas, setSemillas } = useItems();
 

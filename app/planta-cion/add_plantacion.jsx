@@ -11,7 +11,24 @@ import { useRouter } from "expo-router";
 import { validarFormularioPlantacion } from "./validaciones";
 import { supabase } from "../../lib/supabase";
 
-const AddPlantacion = () => {
+
+/**
+ * Componente add_plantacion que muestra una lista de plantaciones con la capacidad de agregar y eliminar.
+ *
+ * @component
+ * @returns {JSX.Element} El componente renderizado.
+ *
+ * @function handleDelete
+ * Maneja la eliminación de una plantación seleccionado.
+ *
+ * @function openModal
+ * Abre el modal de confirmación de eliminación.
+ *
+ * @function useEffect
+ * Obtiene los plantaciones al montar el componente.
+ */
+
+const add_plantacion = () => {
   const [plantacion, setPlantacion] = useState({
     especies: "",
     fechaInicio: "",
@@ -154,4 +171,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddPlantacion;
+export default add_plantacion;

@@ -1,6 +1,20 @@
 import React from "react";
-import { Card, Button } from "@rneui/base";
 import { Link } from "expo-router";
+
+/**
+ * Componente ItemsCard que renderiza un enlace estilizado con un título.
+ *
+ * @componente
+ * @param {string} titulo - El título que se muestra en la tarjeta.
+ * @param {string} screen - La ruta a la que el enlace debe navegar.
+ *
+ * @ejemplo
+ * return (
+ *   <ItemsCard titulo="Semillas" screen="/semillas" />
+ * )
+ *
+ * @returns {JSX.Element} El componente renderizado.
+ */
 
 const ItemsCard = ({ titulo = "Semillas", screen = "/index"}) => {
   return (

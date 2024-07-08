@@ -12,7 +12,23 @@ import { validarFormularioTarea } from "./validaciones";
 import { supabase } from "../../lib/supabase";
 import { useItems } from "../../context/ItemsContext";
 
-const AddTarea = () => {
+/**
+ * Componente add_tarea que muestra una lista de tareas con la capacidad de agregar y eliminar.
+ *
+ * @component
+ * @returns {JSX.Element} El componente renderizado.
+ *
+ * @function handleDelete
+ * Maneja la eliminación de una tarea seleccionado.
+ *
+ * @function openModal
+ * Abre el modal de confirmación de eliminación.
+ *
+ * @function useEffect
+ * Obtiene los tareas al montar el componente.
+ */
+
+const add_tarea = () => {
   const { getTareas } = useItems();
 
   const [nombreTarea, setNombreTarea] = useState("");
@@ -125,4 +141,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddTarea;
+export default add_tarea;

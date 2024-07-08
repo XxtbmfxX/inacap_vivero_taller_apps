@@ -1,17 +1,23 @@
-import { View, Text, Touchable, StyleSheet } from "react-native";
-import { Link } from "expo-router";
+import { View, StyleSheet } from "react-native";
 
 import ItemsCard from "../../components/ItemsCard";
-import { Button } from "@rneui/base";
 
-
-
+/**
+ * Componente index que muestra una cuadrícula de tarjetas de ítems.
+ *
+ * @componente
+ * @ejemplo
+ * return (
+ *   <index />
+ * )
+ *
+ * @returns {JSX.Element} El componente renderizado.
+ */
 
 const index = () => {
   return (
     <View style={styles.container}>
-        
-        <View style={styles.column}>
+      <View style={styles.column}>
         <ItemsCard titulo="Cuenta" screen="/cuenta" />
         <ItemsCard titulo="Plantación" screen="planta-cion" />
         <ItemsCard titulo="Despachos" screen="despachos" />

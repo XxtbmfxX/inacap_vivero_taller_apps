@@ -6,6 +6,26 @@ import { useAuth } from "../../context/AuthContext";
 import { router } from "expo-router";
 import { ScrollView } from "react-native";
 
+
+/**
+ * Componente Account para la gestión del perfil del usuario, incluyendo la actualización del nombre de usuario y la contraseña.
+ *
+ * @componente
+ * @returns {JSX.Element} El componente renderizado.
+ *
+ * @función getProfile
+ * Obtiene el perfil del usuario desde la base de datos.
+ *
+ * @función updateProfile
+ * Actualiza el perfil del usuario en la base de datos.
+ *
+ * @función changePassword
+ * Cambia la contraseña del usuario.
+ *
+ * @función useEffect
+ * Obtiene el perfil del usuario al montar el componente.
+ */
+
 export default function Account() {
   const [loading, setLoading] = useState(false);
   const [newPassword, setNewPassword] = useState("");

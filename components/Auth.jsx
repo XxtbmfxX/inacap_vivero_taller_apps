@@ -4,6 +4,28 @@ import { supabase } from '../lib/supabase'
 import { Button, Input } from '@rneui/themed'
 import { useRouter } from 'expo-router'
 
+
+/**
+ * Componente Auth para manejar la autenticación de usuarios.
+ *
+ * @componente
+ * @ejemplo
+ * return (
+ *   <Auth />
+ * )
+ *
+ * @returns {JSX.Element} El componente renderizado.
+ *
+ * @función signInWithEmail
+ * Inicia el proceso de inicio de sesión con correo electrónico y contraseña.
+ *
+ * @función signUpWithEmail
+ * Inicia el proceso de registro con correo electrónico y contraseña.
+ *
+ * @función signOut
+ * Cierra la sesión del usuario.
+ */
+
 export default function Auth() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')

@@ -7,6 +7,22 @@ import CardPlantacion from "../../components/cards_de_items/CardPlantacion";
 import { supabase } from "../../lib/supabase";
 import { useItems } from "../../context/ItemsContext";
 
+/**
+ * Componente Index que muestra una lista de plantaciones con la capacidad de agregar y eliminar.
+ *
+ * @componente
+ * @returns {JSX.Element} El componente renderizado.
+ *
+ * @función handleDelete
+ * Maneja la eliminación de una plantación seleccionada.
+ *
+ * @función openModal
+ * Abre el modal de confirmación de eliminación.
+ *
+ * @función useEffect
+ * Obtiene las plantaciones al montar el componente.
+ */
+
 const index = () => {
   const { plantacion, setPlantacion, getPlantación } = useItems();
 

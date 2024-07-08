@@ -3,6 +3,21 @@ import React, { useState } from "react";
 import { Button, Card } from "@rneui/base";
 import { supabase } from "../../lib/supabase";
 
+
+/**
+ * Componente de tarjeta para mostrar y editar detalles de una planta.
+ * @param {Object} props Propiedades del componente.
+ * @param {number} props.añoDespacho Año de despacho de la planta.
+ * @param {number} props.numeroPlatabanda Número de platabanda de la planta.
+ * @param {number} props.idEspecie ID de la especie de la planta.
+ * @param {number} props.numeroCosecha Número de cosecha de la planta.
+ * @param {number} props.numeroSector Número de sector de la planta.
+ * @param {number} props.idPlanta ID de la planta.
+ * @param {Function} props.openModal Función para abrir un modal específico.
+ * @param {Function} props.onUpdate Función para actualizar el estado después de una operación.
+ * @returns {JSX.Element} Elemento de tarjeta que muestra o edita detalles de la planta.
+ */
+
 const CardPlantas = ({
   añoDespacho,
   numeroPlatabanda,
@@ -19,6 +34,15 @@ const CardPlantas = ({
   const [newIdEspecie, setNewIdEspecie] = useState(idEspecie);
   const [newNumeroCosecha, setNewNumeroCosecha] = useState(numeroCosecha);
   const [newNumeroSector, setNewNumeroSector] = useState(numeroSector);
+
+
+   /**
+   * Maneja la actualización de los detalles de la planta en la base de datos.
+   * Actualiza el año de despacho, número de platabanda, ID de especie,
+   * número de cosecha y número de sector de la planta.
+   * Llama a la función onUpdate después de la actualización exitosa.
+   * @returns {Promise<void>} Promesa que se resuelve después de la actualización.
+   */
 
   const handleUpdate = async () => {
     const { error } = await supabase

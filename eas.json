@@ -3,7 +3,7 @@
     "version": ">= 8.0.0"
   },
   "build": {
-    "version001": {
+    "versionEntrega": {
       "android": {
         "buildType": "apk"
       },

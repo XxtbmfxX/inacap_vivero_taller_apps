@@ -3,6 +3,18 @@ import React, { useState } from "react";
 import { Button, Card } from "@rneui/base";
 import { supabase } from "../../lib/supabase";
 
+
+/**
+ * Componente de tarjeta para mostrar y editar detalles de un material.
+ * @param {Object} props Propiedades del componente.
+ * @param {number} props.idMaterial ID del material.
+ * @param {string} props.nombreMaterial Nombre del material.
+ * @param {string} props.unidadDeMedida Unidad de medida del material.
+ * @param {number} props.cantidad Cantidad del material.
+ * @param {Function} props.openModal Función para abrir un modal específico.
+ * @param {Function} props.onUpdate Función para actualizar el estado después de una operación.
+ * @returns {JSX.Element} Elemento de tarjeta que muestra o edita detalles del material.
+ */
 const CardMaterial = ({
   idMaterial,
   nombreMaterial,
@@ -16,6 +28,12 @@ const CardMaterial = ({
   const [newUnidadDeMedida, setNewUnidadDeMedida] = useState(unidadDeMedida);
   const [newCantidad, setNewCantidad] = useState(cantidad);
 
+  /**
+   * Maneja la actualización de los detalles del material en la base de datos.
+   * Actualiza el nombre, unidad de medida y cantidad del material.
+   * Llama a la función onUpdate después de la actualización exitosa.
+   * @returns {Promise<void>} Promesa que se resuelve después de la actualización.
+   */
   const handleUpdate = async () => {
     const { error } = await supabase
       .from('material')

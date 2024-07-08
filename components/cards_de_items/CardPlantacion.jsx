@@ -3,6 +3,22 @@ import React, { useState } from "react";
 import { Button, Card } from "@rneui/base";
 import { supabase } from "../../lib/supabase";
 
+
+/**
+ * Componente de tarjeta para mostrar y editar detalles de una plantación.
+ * @param {Object} props Propiedades del componente.
+ * @param {string} props.plantacion Nombre de la plantación.
+ * @param {string} props.fechaInicio Fecha de inicio de la plantación.
+ * @param {string} props.fechaCosecha Fecha de cosecha de la plantación.
+ * @param {string[]} props.especies Especies principales de la plantación.
+ * @param {number} props.numeroCosecha Número de cosecha de la plantación.
+ * @param {string} props.nombreColector Nombre del colector de la plantación.
+ * @param {Function} props.openModal Función para abrir un modal específico.
+ * @param {Function} props.onUpdate Función para actualizar el estado después de una operación.
+ * @param {string[]} props.otrasEspecies Otras especies presentes en la plantación.
+ * @returns {JSX.Element} Elemento de tarjeta que muestra o edita detalles de la plantación.
+ */
+
 const CardPlantacion = ({
   plantacion,
   fechaInicio,
@@ -20,6 +36,13 @@ const CardPlantacion = ({
   const [newFechaCosecha, setNewFechaCosecha] = useState(fechaCosecha);
   const [newEspecies, setNewEspecies] = useState(otrasEspecies.join(","));
   const [newNombreColector, setNewNombreColector] = useState(nombreColector);
+
+    /**
+   * Maneja la actualización de los detalles de la plantación en la base de datos.
+   * Actualiza la fecha de inicio, fecha de cosecha, especies y nombre del colector.
+   * Llama a la función onUpdate después de la actualización exitosa.
+   * @returns {Promise<void>} Promesa que se resuelve después de la actualización.
+   */
 
   const handleUpdate = async () => {
     const { error } = await supabase

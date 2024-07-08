@@ -8,6 +8,22 @@ import Navegacion from "../../components/Navegacion";
 import { supabase } from "../../lib/supabase";
 
 
+/**
+ * Componente Index que muestra una lista de tareas con la capacidad de agregar y eliminar.
+ *
+ * @componente
+ * @returns {JSX.Element} El componente renderizado.
+ *
+ * @función handleDelete
+ * Maneja la eliminación de una tarea seleccionada.
+ *
+ * @función openModal
+ * Abre el modal de confirmación de eliminación.
+ *
+ * @función useEffect
+ * Obtiene las tareas al montar el componente.
+ */
+
 const Index = () => {
   const { tareas, getTareas, setTareas } = useItems();
 

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: app/cuenta/index.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: app/cuenta/index.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { useState, useEffect } from "react";
+import { supabase } from "../../lib/supabase";
+import { StyleSheet, View, Alert } from "react-native";
+import { Button, Input } from "@rneui/themed";
+import { useAuth } from "../../context/AuthContext";
+import { router } from "expo-router";
+import { ScrollView } from "react-native";
+
+
+/**
+ * Componente Account para la gestión del perfil del usuario, incluyendo la actualización del nombre de usuario y la contraseña.
+ *
+ * @componente
+ * @returns {JSX.Element} El componente renderizado.
+ *
+ * @función getProfile
+ * Obtiene el perfil del usuario desde la base de datos.
+ *
+ * @función updateProfile
+ * Actualiza el perfil del usuario en la base de datos.
+ *
+ * @función changePassword
+ * Cambia la contraseña del usuario.
+ *
+ * @función useEffect
+ * Obtiene el perfil del usuario al montar el componente.
+ */
+
+export default function Account() {
+  const [loading, setLoading] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  
+  const { session, manageLogout, setSession } = useAuth();
+
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    if (session) getProfile();
+  }, [session]);
+
+  async function getProfile() {
+    try {
+      setLoading(true);
+      if (!session?.user) throw new Error("No user on the session!");
+
+      const { data, error, status } = await supabase
+        .from("usuario")
+        .select(`username`)
+        .eq("id", session?.user.id)
+        .single();
+      if (error &amp;&amp; status !== 406) {
+        throw error;
+      }
+
+      if (data) {
+        setUsername(data.username);
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert(error.message);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function updateProfile({ username }) {
+    try {
+      setLoading(true);
+      if (!session?.user) throw new Error("No hay sesión de usuario!");
+
+      const updates = {
+        id: session?.user.id,
+        username,
+        updated_at: new Date(),
+      };
+
+      const { error } = await supabase.from("usuario").upsert(updates);
+
+      if (error) {
+        throw error;
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert(error.message);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function changePassword() {
+    if (newPassword !== confirmPassword) {
+      Alert.alert("Las contraseñas no coinciden");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword,
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      Alert.alert("Contraseña actualizada con éxito");
+      setNewPassword("");
+      setConfirmPassword("");
+      setSession(null)
+      router.navigate("/")
+
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert(error.message);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    &lt;ScrollView style={styles.container}>
+      &lt;View style={[styles.verticallySpaced, styles.mt20]}>
+        &lt;Input label="Email" value={session?.user?.email} disabled />
+      &lt;/View>
+      &lt;View style={styles.verticallySpaced}>
+        &lt;Input
+          label="Nombre de usuario"
+          value={username || ""}
+          onChangeText={(text) => setUsername(text)}
+        />
+      &lt;/View>
+
+      &lt;View style={styles.verticallySpaced}>
+        &lt;Input
+          label="Nueva Contraseña"
+          value={newPassword}
+          onChangeText={(text) => setNewPassword(text)}
+          secureTextEntry
+        />
+      &lt;/View>
+      &lt;View style={styles.verticallySpaced}>
+        &lt;Input
+          label="Confirmar Nueva Contraseña"
+          value={confirmPassword}
+          onChangeText={(text) => setConfirmPassword(text)}
+          secureTextEntry
+        />
+      &lt;/View>
+
+      &lt;View style={[styles.verticallySpaced, styles.mt20]}>
+        &lt;Button
+          title={loading ? "Cargando ..." : "Actualizar"}
+          onPress={() => updateProfile({ username })}
+          disabled={loading}
+        />
+      &lt;/View>
+
+      &lt;View style={styles.verticallySpaced}>
+        &lt;Button
+          title={loading ? "Cargando ..." : "Cambiar Contraseña"}
+          onPress={changePassword}
+          disabled={loading}
+        />
+      &lt;/View>
+
+      &lt;View style={styles.verticallySpaced}>
+        &lt;Button title="Cerrar Sesión" onPress={manageLogout} />
+      &lt;/View>
+    &lt;/ScrollView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    marginTop: 40,
+    padding: 12,
+  },
+  verticallySpaced: {
+    paddingTop: 4,
+    paddingBottom: 4,
+    alignSelf: "stretch",
+  },
+  mt20: {
+    marginTop: 20,
+  },
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#CardDespacho">CardDespacho</a></li><li><a href="global.html#CardMaterial">CardMaterial</a></li><li><a href="global.html#CardPlantacion">CardPlantacion</a></li><li><a href="global.html#CardPlantas">CardPlantas</a></li><li><a href="global.html#CardQuimicos">CardQuimicos</a></li><li><a href="global.html#CardSemillas">CardSemillas</a></li><li><a href="global.html#CardTareas">CardTareas</a></li><li><a href="global.html#CardTrabajadores">CardTrabajadores</a></li><li><a href="global.html#Index">Index</a></li><li><a href="global.html#ItemsCard">ItemsCard</a></li><li><a href="global.html#Navegacion">Navegacion</a></li><li><a href="global.html#formatDate">formatDate</a></li><li><a href="global.html#index">index</a></li><li><a href="global.html#useEffectObtienelosdespachosalmontarelcomponente.">useEffectObtiene los despachos al montar el componente.</a></li><li><a href="global.html#useEffectObtienelosmaterialesalmontarelcomponente.">useEffectObtiene los materiales al montar el componente.</a></li><li><a href="global.html#useEffectObtienelosplantacionesalmontarelcomponente.">useEffectObtiene los plantaciones al montar el componente.</a></li><li><a href="global.html#useEffectObtienelosplantasalmontarelcomponente.">useEffectObtiene los plantas al montar el componente.</a></li><li><a href="global.html#useEffectObtienelosqu%25C3%25ADmicosalmontarelcomponente.">useEffectObtiene los químicos al montar el componente.</a></li><li><a href="global.html#useEffectObtienelossemillasalmontarelcomponente.">useEffectObtiene los semillas al montar el componente.</a></li><li><a href="global.html#useEffectObtienelostareasalmontarelcomponente.">useEffectObtiene los tareas al montar el componente.</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Mon Jul 08 2024 14:54:23 GMT-0400 (hora estándar de Chile)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

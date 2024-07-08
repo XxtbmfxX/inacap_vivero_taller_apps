@@ -4,8 +4,22 @@ import { useRouter } from 'expo-router';
 import { supabase } from "../../lib/supabase";
 import { useItems } from '../../context/ItemsContext';
 import { validarFormularioMaterial } from "./validaciones";
-
-const IngresarMaterialesForm = () => {
+/**
+ * Componente add_materiales que muestra una lista de materiales con la capacidad de agregar y eliminar.
+ *
+ * @component
+ * @returns {JSX.Element} El componente renderizado.
+ *
+ * @function handleDelete
+ * Maneja la eliminación de un material seleccionado.
+ *
+ * @function openModal
+ * Abre el modal de confirmación de eliminación.
+ *
+ * @function useEffect
+ * Obtiene los materiales al montar el componente.
+ */
+const add_materiales = () => {
   const { getMaterial } = useItems();
   const [nombreMaterial, setNombreMaterial] = useState("");
   const [unidadDeMedida, setUnidadDeMedida] = useState("");
@@ -120,4 +134,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default IngresarMaterialesForm;
+export default add_materiales;

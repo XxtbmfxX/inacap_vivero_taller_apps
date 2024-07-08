@@ -3,6 +3,27 @@ import React, { useState } from "react";
 import { Button, Card } from "@rneui/base";
 import { supabase } from "../../lib/supabase";
 
+
+/**
+ * Componente de tarjeta para mostrar y editar detalles de una semilla.
+ * @param {Object} props Propiedades del componente.
+ * @param {number} props.codigoBolsa Código de bolsa de la semilla.
+ * @param {number} props.cantidad Cantidad de semillas.
+ * @param {string} props.fechaRecepcion Fecha de recepción de las semillas.
+ * @param {string} props.fechaColecta Fecha de colecta de las semillas.
+ * @param {number} props.porcentajeGerminacion Porcentaje de germinación de las semillas.
+ * @param {number} props.pesoEnviado Peso enviado de las semillas.
+ * @param {number} props.pesoRecibido Peso recibido de las semillas.
+ * @param {string} props.condicionSemilla Condición de las semillas.
+ * @param {number} props.idEspecie ID de la especie de las semillas.
+ * @param {number} props.idProcedencia ID de la procedencia de las semillas.
+ * @param {number} props.idBodega ID de la bodega de las semillas.
+ * @param {number} props.rutColector RUT del colector de las semillas.
+ * @param {Function} props.openModal Función para abrir un modal específico.
+ * @param {Function} props.onUpdate Función para actualizar el estado después de una operación.
+ * @returns {JSX.Element} Elemento de tarjeta que muestra o edita detalles de las semillas.
+ */
+
 const CardSemillas = ({
   codigoBolsa,
   cantidad,
@@ -27,6 +48,15 @@ const CardSemillas = ({
   const [newPesoEnviado, setNewPesoEnviado] = useState(pesoEnviado);
   const [newPesoRecibido, setNewPesoRecibido] = useState(pesoRecibido);
   const [newCondicionSemilla, setNewCondicionSemilla] = useState(condicionSemilla);
+
+
+    /**
+   * Maneja la actualización de los detalles de la semilla en la base de datos.
+   * Actualiza la cantidad, fecha de recepción, fecha de colecta,
+   * porcentaje de germinación, peso enviado, peso recibido y condición de la semilla.
+   * Llama a la función onUpdate después de la actualización exitosa.
+   * @returns {Promise<void>} Promesa que se resuelve después de la actualización.
+   */
 
   const handleUpdate = async () => {
     const { error } = await supabase

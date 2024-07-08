@@ -8,6 +8,23 @@ import Navegacion from "../../components/Navegacion";
 import { supabase } from "../../lib/supabase";
 import { useItems } from "../../context/ItemsContext";
 
+
+/**
+ * Componente Index que muestra una lista de despachos con la capacidad de agregar y eliminar.
+ *
+ * @componente
+ * @returns {JSX.Element} El componente renderizado.
+ *
+ * @función handleDelete
+ * Maneja la eliminación de un despacho seleccionado.
+ *
+ * @función openModal
+ * Abre el modal de confirmación de eliminación.
+ *
+ * @función useEffect
+ * Obtiene los despachos al montar el componente.
+ */
+
 const index = () => {
 
    const {getDespachos, despachos, setDespachos} = useItems()

@@ -9,7 +9,21 @@ import { supabase } from "../../lib/supabase";
 import { useItems } from "../../context/ItemsContext";
 
 
-
+/**
+ * Componente Index que muestra una lista de materiales con la capacidad de agregar y eliminar.
+ *
+ * @componente
+ * @returns {JSX.Element} El componente renderizado.
+ *
+ * @función handleDelete
+ * Maneja la eliminación de un material seleccionado.
+ *
+ * @función openModal
+ * Abre el modal de confirmación de eliminación.
+ *
+ * @función useEffect
+ * Obtiene los materiales al montar el componente.
+ */
 const index = () => {
    const {materiales, setMateriales, getMateriales} = useItems()
 

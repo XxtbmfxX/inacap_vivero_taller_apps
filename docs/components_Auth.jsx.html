@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/Auth.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/Auth.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState } from 'react'
+import { Alert, StyleSheet, View } from 'react-native'
+import { supabase } from '../lib/supabase'
+import { Button, Input } from '@rneui/themed'
+import { useRouter } from 'expo-router'
+
+
+/**
+ * Componente Auth para manejar la autenticación de usuarios.
+ *
+ * @componente
+ * @ejemplo
+ * return (
+ *   &lt;Auth />
+ * )
+ *
+ * @returns {JSX.Element} El componente renderizado.
+ *
+ * @función signInWithEmail
+ * Inicia el proceso de inicio de sesión con correo electrónico y contraseña.
+ *
+ * @función signUpWithEmail
+ * Inicia el proceso de registro con correo electrónico y contraseña.
+ *
+ * @función signOut
+ * Cierra la sesión del usuario.
+ */
+
+export default function Auth() {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
+  const router = useRouter();
+
+  async function signInWithEmail() {
+    setLoading(true)
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
+    })
+
+    if (error) Alert.alert(error.message)
+    setLoading(false)
+  }
+
+  async function signUpWithEmail() {
+    setLoading(true)
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.signUp({
+      email: email,
+      password: password,
+    })
+
+    if (error) Alert.alert(error.message)
+    if (!session) Alert.alert('Revisa tu correo para verificar tu cuenta 🧐')
+    setLoading(false)
+  }
+
+  async function signOut() {
+    await supabase.auth.signOut();
+  }
+
+  return (
+    &lt;View style={styles.container}>
+      &lt;View style={[styles.verticallySpaced, styles.mt20]}>
+        &lt;Input
+          label="Email"
+          leftIcon={{ type: 'font-awesome', name: 'envelope' }}
+          onChangeText={(text) => setEmail(text)}
+          value={email}
+          placeholder="email@address.com"
+          autoCapitalize={'none'}
+        />
+      &lt;/View>
+      &lt;View style={styles.verticallySpaced}>
+        &lt;Input
+          label="Password"
+          leftIcon={{ type: 'font-awesome', name: 'lock' }}
+          onChangeText={(text) => setPassword(text)}
+          value={password}
+          secureTextEntry={true}
+          placeholder="Password"
+          autoCapitalize={'none'}
+        />
+      &lt;/View>
+      &lt;View style={[styles.verticallySpaced, styles.mt20]}>
+        &lt;Button title="Iniciar sesión" disabled={loading} onPress={() => signInWithEmail()} />
+      &lt;/View>
+      &lt;View style={styles.verticallySpaced}>
+        &lt;Button title="Registrarse" disabled={loading} onPress={() => signUpWithEmail()} />
+      &lt;/View>
+      &lt;View style={[styles.verticallySpaced, styles.mt20]}>
+        &lt;Button 
+          title="Términos y condiciones" 
+          type="clear" 
+          onPress={() => router.push('/terms')} 
+        />
+      &lt;/View>
+    &lt;/View>
+  )
+}
+
+const styles = StyleSheet.create({
+  container: {
+    marginTop: 40,
+    padding: 12,
+  },
+  verticallySpaced: {
+    paddingTop: 4,
+    paddingBottom: 4,
+    alignSelf: 'stretch',
+  },
+  mt20: {
+    marginTop: 20,
+  },
+})</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#CardDespacho">CardDespacho</a></li><li><a href="global.html#CardMaterial">CardMaterial</a></li><li><a href="global.html#CardPlantacion">CardPlantacion</a></li><li><a href="global.html#CardPlantas">CardPlantas</a></li><li><a href="global.html#CardQuimicos">CardQuimicos</a></li><li><a href="global.html#CardSemillas">CardSemillas</a></li><li><a href="global.html#CardTareas">CardTareas</a></li><li><a href="global.html#CardTrabajadores">CardTrabajadores</a></li><li><a href="global.html#Index">Index</a></li><li><a href="global.html#ItemsCard">ItemsCard</a></li><li><a href="global.html#Navegacion">Navegacion</a></li><li><a href="global.html#formatDate">formatDate</a></li><li><a href="global.html#index">index</a></li><li><a href="global.html#useEffectObtienelosdespachosalmontarelcomponente.">useEffectObtiene los despachos al montar el componente.</a></li><li><a href="global.html#useEffectObtienelosmaterialesalmontarelcomponente.">useEffectObtiene los materiales al montar el componente.</a></li><li><a href="global.html#useEffectObtienelosplantacionesalmontarelcomponente.">useEffectObtiene los plantaciones al montar el componente.</a></li><li><a href="global.html#useEffectObtienelosplantasalmontarelcomponente.">useEffectObtiene los plantas al montar el componente.</a></li><li><a href="global.html#useEffectObtienelosqu%25C3%25ADmicosalmontarelcomponente.">useEffectObtiene los químicos al montar el componente.</a></li><li><a href="global.html#useEffectObtienelossemillasalmontarelcomponente.">useEffectObtiene los semillas al montar el componente.</a></li><li><a href="global.html#useEffectObtienelostareasalmontarelcomponente.">useEffectObtiene los tareas al montar el componente.</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Mon Jul 08 2024 14:54:23 GMT-0400 (hora estándar de Chile)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

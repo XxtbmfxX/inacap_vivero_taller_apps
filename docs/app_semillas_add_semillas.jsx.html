@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: app/semillas/add_semillas.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: app/semillas/add_semillas.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
+import { validarFormularioSemilla } from "./validaciones";
+import { supabase } from "../../lib/supabase";
+import { useItems } from "../../context/ItemsContext";
+import { router } from "expo-router";
+
+/**
+ * Componente add_semillas que muestra una lista de semillas con la capacidad de agregar y eliminar.
+ *
+ * @component
+ * @returns {JSX.Element} El componente renderizado.
+ *
+ * @function handleDelete
+ * Maneja la eliminación de una semilla seleccionado.
+ *
+ * @function openModal
+ * Abre el modal de confirmación de eliminación.
+ *
+ * @function useEffect
+ * Obtiene los semillas al montar el componente.
+ */
+
+const add_semillas = () => {
+  const { getSemillas } = useItems();
+
+  const [semillas, setSemillas] = useState({
+    codigoBolsa: "",
+    cantidad: "",
+    fechaRecepcion: "",
+    fechaColecta: "",
+    porcentajeGerminacion: "",
+    pesoEnviado: "",
+    pesoRecibido: "",
+    condicionSemilla: "",
+    Especie: "",
+    Procedencia: "",
+    Bodega: "",
+    Colector: "",
+  });
+
+  const [errores, setErrores] = useState({});
+
+  const handleChange = (field, value) => {
+    setSemillas((prevState) => ({
+      ...prevState,
+      [field]: value,
+    }));
+  };
+
+  const handleSubmit = async () => {
+    const validationErrores = validarFormularioSemilla(semillas);
+
+    if (Object.keys(validationErrores).length > 0) {
+      setErrores(validationErrores);
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from("semilla")
+      .insert([
+        {
+          codigo_bolsa: semillas.codigoBolsa,
+          cantidad: parseInt(semillas.cantidad), // Asegúrate de convertir a entero si es necesario
+          fecha_recepcion: new Date(semillas.fechaRecepcion),
+          fecha_colecta: new Date(semillas.fechaColecta),
+          porcentaje_germinacion: semillas.porcentajeGerminacion,
+          peso_enviado: semillas.pesoEnviado,
+          peso_recibido: semillas.pesoRecibido,
+          condicion_semilla: semillas.condicionSemilla,
+          id_especie: semillas.Especie,
+          id_procedencia: semillas.Procedencia,
+          id_bodega: semillas.Bodega,
+          rut_colector: semillas.Colector,
+        },
+      ])
+      .select();
+
+    if (error) {
+      console.error("Error al añadir semilla:", error);
+      setErrores({
+        general: "Error al añadir la semilla. Por favor, inténtalo de nuevo.",
+      });
+    } else {
+      getSemillas();
+      router.back();
+    }
+  };
+
+  return (
+    &lt;ScrollView contentContainerStyle={styles.scrollContainer}>
+      &lt;View style={styles.container}>
+        &lt;Text style={styles.title}>Agregar Semillas&lt;/Text>
+
+        &lt;View style={styles.inputContainer}>
+          &lt;TextInput
+            style={[styles.input, errores.codigoBolsa &amp;&amp; styles.inputError]}
+            placeholder="Código de Bolsa. Ejem:B0N"
+            placeholderTextColor="#000"
+            value={semillas.codigoBolsa}
+            onChangeText={(text) => handleChange("codigoBolsa", text)}
+          />
+          {errores.codigoBolsa &amp;&amp; (
+            &lt;Text style={styles.errorText}>{errores.codigoBolsa}&lt;/Text>
+          )}
+        &lt;/View>
+
+        &lt;View style={styles.inputContainer}>
+          &lt;TextInput
+            style={[styles.input, errores.cantidad &amp;&amp; styles.inputError]}
+            placeholder="Cantidad (hasta 999)"
+            placeholderTextColor="#000"
+            value={semillas.cantidad}
+            onChangeText={(text) => handleChange("cantidad", text)}
+          />
+          {errores.cantidad &amp;&amp; (
+            &lt;Text style={styles.errorText}>{errores.cantidad}&lt;/Text>
+          )}
+        &lt;/View>
+
+        &lt;View style={styles.inputContainer}>
+          &lt;TextInput
+            style={[styles.input, errores.fechaRecepcion &amp;&amp; styles.inputError]}
+            placeholder="Fecha Recepción (mm-dd-yyyy) "
+            placeholderTextColor="#000"
+            value={semillas.fechaRecepcion}
+            onChangeText={(text) => handleChange("fechaRecepcion", text)}
+          />
+          {errores.fechaRecepcion &amp;&amp; (
+            &lt;Text style={styles.errorText}>{errores.fechaRecepcion}&lt;/Text>
+          )}
+        &lt;/View>
+
+        &lt;View style={styles.inputContainer}>
+          &lt;TextInput
+            style={[styles.input, errores.fechaColecta &amp;&amp; styles.inputError]}
+            placeholder="Fecha Colecta (mm-dd-yyyy) "
+            placeholderTextColor="#000"
+            value={semillas.fechaColecta}
+            onChangeText={(text) => handleChange("fechaColecta", text)}
+          />
+          {errores.fechaColecta &amp;&amp; (
+            &lt;Text style={styles.errorText}>{errores.fechaColecta}&lt;/Text>
+          )}
+        &lt;/View>
+
+        &lt;View style={styles.inputContainer}>
+          &lt;TextInput
+            style={[
+              styles.input,
+              errores.porcentajeGerminacion &amp;&amp; styles.inputError,
+            ]}
+            placeholder="Porcentaje Germinación Ejem: 99% "
+            placeholderTextColor="#000"
+            value={semillas.porcentajeGerminacion}
+            onChangeText={(text) => handleChange("porcentajeGerminacion", text)}
+          />
+          {errores.porcentajeGerminacion &amp;&amp; (
+            &lt;Text style={styles.errorText}>
+              {errores.porcentajeGerminacion}
+            &lt;/Text>
+          )}
+        &lt;/View>
+
+        &lt;View style={styles.inputContainer}>
+          &lt;TextInput
+            style={[styles.input, errores.pesoEnviado &amp;&amp; styles.inputError]}
+            placeholder="Peso Enviado Ejem:100kg"
+            placeholderTextColor="#000"
+            value={semillas.pesoEnviado}
+            onChangeText={(text) => handleChange("pesoEnviado", text)}
+          />
+          {errores.pesoEnviado &amp;&amp; (
+            &lt;Text style={styles.errorText}>{errores.pesoEnviado}&lt;/Text>
+          )}
+        &lt;/View>
+
+        &lt;View style={styles.inputContainer}>
+          &lt;TextInput
+            style={[styles.input, errores.pesoRecibido &amp;&amp; styles.inputError]}
+            placeholder="Peso Recibido Ejem:100kg"
+            placeholderTextColor="#000"
+            value={semillas.pesoRecibido}
+            onChangeText={(text) => handleChange("pesoRecibido", text)}
+          />
+          {errores.pesoRecibido &amp;&amp; (
+            &lt;Text style={styles.errorText}>{errores.pesoRecibido}&lt;/Text>
+          )}
+        &lt;/View>
+
+        &lt;View style={styles.inputContainer}>
+          &lt;TextInput
+            style={[
+              styles.input,
+              errores.condicionSemilla &amp;&amp; styles.inputError,
+            ]}
+            placeholder="Condición Semilla"
+            placeholderTextColor="#000"
+            value={semillas.condicionSemilla}
+            onChangeText={(text) => handleChange("condicionSemilla", text)}
+          />
+          {errores.condicionSemilla &amp;&amp; (
+            &lt;Text style={styles.errorText}>{errores.condicionSemilla}&lt;/Text>
+          )}
+        &lt;/View>
+
+        &lt;View style={styles.inputContainer}>
+          &lt;TextInput
+            style={[styles.input, errores.Especie &amp;&amp; styles.inputError]}
+            placeholder="Especie (1) "
+            placeholderTextColor="#000"
+            value={semillas.Especie}
+            onChangeText={(text) => handleChange("Especie", text)}
+          />
+          {errores.Especie &amp;&amp; (
+            &lt;Text style={styles.errorText}>{errores.Especie}&lt;/Text>
+          )}
+        &lt;/View>
+
+        &lt;View style={styles.inputContainer}>
+          &lt;TextInput
+            style={[styles.input, errores.Procedencia &amp;&amp; styles.inputError]}
+            placeholder="Procedencia (222) "
+            placeholderTextColor="#000"
+            value={semillas.Procedencia}
+            onChangeText={(text) => handleChange("Procedencia", text)}
+          />
+          {errores.Procedencia &amp;&amp; (
+            &lt;Text style={styles.errorText}>{errores.Procedencia}&lt;/Text>
+          )}
+        &lt;/View>
+
+        &lt;View style={styles.inputContainer}>
+          &lt;TextInput
+            style={[styles.input, errores.Bodega &amp;&amp; styles.inputError]}
+            placeholder="Bodega"
+            placeholderTextColor="#000"
+            value={semillas.Bodega}
+            onChangeText={(text) => handleChange("Bodega", text)}
+          />
+          {errores.Bodega &amp;&amp; (
+            &lt;Text style={styles.errorText}>{errores.Bodega}&lt;/Text>
+          )}
+        &lt;/View>
+
+        &lt;View style={styles.inputContainer}>
+          &lt;TextInput
+            style={[styles.input, errores.Colector &amp;&amp; styles.inputError]}
+            placeholder="Nombre Colector Ejem: 11.123.456-k"
+            placeholderTextColor="#000"
+            value={semillas.Colector}
+            onChangeText={(text) => handleChange("Colector", text)}
+          />
+          {errores.Colector &amp;&amp; (
+            &lt;Text style={styles.errorText}>{errores.Colector}&lt;/Text>
+          )}
+        &lt;/View>
+
+        &lt;Button title="Guardar" onPress={handleSubmit} color="#000" />
+      &lt;/View>
+    &lt;/ScrollView>
+  );
+};
+
+const styles = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: "center",
+  },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    padding: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  inputContainer: {
+    width: "100%",
+    marginBottom: 10,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 10,
+    borderRadius: 20,
+    backgroundColor: "#D5DBDB",
+  },
+  inputError: {
+    borderColor: "red",
+  },
+  errorText: {
+    color: "red",
+    marginTop: 5,
+  },
+  button: {
+    backgroundColor: "#000",
+    padding: 10,
+    alignItems: "center",
+    marginTop: 10,
+    borderRadius: 10,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+  },
+});
+
+export default add_semillas;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#CardDespacho">CardDespacho</a></li><li><a href="global.html#CardMaterial">CardMaterial</a></li><li><a href="global.html#CardPlantacion">CardPlantacion</a></li><li><a href="global.html#CardPlantas">CardPlantas</a></li><li><a href="global.html#CardQuimicos">CardQuimicos</a></li><li><a href="global.html#CardSemillas">CardSemillas</a></li><li><a href="global.html#CardTareas">CardTareas</a></li><li><a href="global.html#CardTrabajadores">CardTrabajadores</a></li><li><a href="global.html#Index">Index</a></li><li><a href="global.html#ItemsCard">ItemsCard</a></li><li><a href="global.html#Navegacion">Navegacion</a></li><li><a href="global.html#formatDate">formatDate</a></li><li><a href="global.html#index">index</a></li><li><a href="global.html#useEffectObtienelosdespachosalmontarelcomponente.">useEffectObtiene los despachos al montar el componente.</a></li><li><a href="global.html#useEffectObtienelosmaterialesalmontarelcomponente.">useEffectObtiene los materiales al montar el componente.</a></li><li><a href="global.html#useEffectObtienelosplantacionesalmontarelcomponente.">useEffectObtiene los plantaciones al montar el componente.</a></li><li><a href="global.html#useEffectObtienelosplantasalmontarelcomponente.">useEffectObtiene los plantas al montar el componente.</a></li><li><a href="global.html#useEffectObtienelosqu%25C3%25ADmicosalmontarelcomponente.">useEffectObtiene los químicos al montar el componente.</a></li><li><a href="global.html#useEffectObtienelossemillasalmontarelcomponente.">useEffectObtiene los semillas al montar el componente.</a></li><li><a href="global.html#useEffectObtienelostareasalmontarelcomponente.">useEffectObtiene los tareas al montar el componente.</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Mon Jul 08 2024 14:54:23 GMT-0400 (hora estándar de Chile)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

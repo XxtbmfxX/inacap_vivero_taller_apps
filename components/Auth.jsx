@@ -2,11 +2,13 @@ import React, { useState } from 'react'
 import { Alert, StyleSheet, View } from 'react-native'
 import { supabase } from '../lib/supabase'
 import { Button, Input } from '@rneui/themed'
+import { useRouter } from 'expo-router'
 
 export default function Auth() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const router = useRouter();
 
   async function signInWithEmail() {
     setLoading(true)
@@ -32,6 +34,10 @@ export default function Auth() {
     if (error) Alert.alert(error.message)
     if (!session) Alert.alert('Revisa tu correo para verificar tu cuenta 🧐')
     setLoading(false)
+  }
+
+  async function signOut() {
+    await supabase.auth.signOut();
   }
 
   return (
@@ -62,6 +68,13 @@ export default function Auth() {
       </View>
       <View style={styles.verticallySpaced}>
         <Button title="Registrarse" disabled={loading} onPress={() => signUpWithEmail()} />
+      </View>
+      <View style={[styles.verticallySpaced, styles.mt20]}>
+        <Button 
+          title="Términos y condiciones" 
+          type="clear" 
+          onPress={() => router.push('/terms')} 
+        />
       </View>
     </View>
   )

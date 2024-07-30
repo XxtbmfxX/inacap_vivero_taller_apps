@@ -1,4 +1,4 @@
-import { ScrollView, Text } from "react-native";
+import { ScrollView, Text, View, StyleSheet, TextInput } from "react-native";
 import React, { useEffect, useState } from "react";
 
 import ModalConfirmarDelete from "../../components/ModalConfirmarDelete";
@@ -31,6 +31,7 @@ const index = () => {
 
   const [despachoSeleccionado, setDespachoSeleccionado] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleDelete = async () => {
     if (despachoSeleccionado) {
@@ -61,6 +62,11 @@ const index = () => {
     getDespachos();
   }, []);
 
+  const filteredDespachos = despachos.filter(despacho =>
+    despacho.numero_guia_despacho.toString().includes(searchQuery) ||
+    despacho.predio.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <ScrollView contentContainerStyle={{ alignItems: "center" }}>
       <Text
@@ -72,12 +78,19 @@ const index = () => {
       >
         Despachos
       </Text>
+      <View style={styles.searchContainer}>
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Buscar por numero de guia o predio"
+          onChangeText={(text) => setSearchQuery(text)}
+        />
+      </View>
       <Navegacion
         titulo={"agregar Despacho"}
         screen={"/despachos/add_despacho"}
       />
-      {despachos.length > 0 ? (
-        despachos.map((despacho) => (
+      {filteredDespachos.length > 0 ? (
+        filteredDespachos.map((despacho) => (
           <CardDespacho
             numeroGuiaDespacho={despacho.numero_guia_despacho}
             observaciones={despacho.observaciones}
@@ -108,4 +121,20 @@ const index = () => {
   );
 };
 
+
+const styles = StyleSheet.create({
+  searchContainer: {
+    width: '90%',
+    marginBottom: 20,
+  },
+  searchInput: {
+    backgroundColor: '#f0f0f0',
+    padding: 10,
+    borderRadius: 10,
+    fontSize: 16,
+  },
+});
+
 export default index;
+
+

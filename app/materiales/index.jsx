@@ -81,7 +81,7 @@ const index = () => {
         materiales.map((material) => (
           <CardMaterial
             nombreMaterial={material.nombre}
-            unidadDeMedida={material.unidad_de_medida}
+            unidadDeMedida={material.unidad_medida}
             cantidad={material.cantidad}
             key={material.id_material}
             idMaterial={material.id_material}

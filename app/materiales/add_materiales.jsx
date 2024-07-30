@@ -20,7 +20,7 @@ import { validarFormularioMaterial } from "./validaciones";
  * Obtiene los materiales al montar el componente.
  */
 const add_materiales = () => {
-  const { getMaterial } = useItems();
+  const { getMateriales } = useItems();
   const [nombreMaterial, setNombreMaterial] = useState("");
   const [unidadDeMedida, setUnidadDeMedida] = useState("");
   const [cantidadMaterial, setCantidadMaterial] = useState("");
@@ -41,7 +41,7 @@ const add_materiales = () => {
     const { data, error } = await supabase
       .from("material")
       .insert([{
-        nombre_material: nombreMaterial,
+        nombre: nombreMaterial,
         unidad_medida: unidadDeMedida,
         cantidad: cantidadMaterial
       }]).select();
@@ -52,7 +52,7 @@ const add_materiales = () => {
         general: "Error al añadir el material. Por favor, inténtalo de nuevo."
       });
     } else {
-      getMaterial();
+      getMateriales();
       router.back();
     }
   };

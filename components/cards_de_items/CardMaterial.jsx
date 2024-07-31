@@ -39,7 +39,7 @@ const CardMaterial = ({
       .from('material')
       .update({
         nombre: newNombreMaterial,
-        unidad_de_medida: newUnidadDeMedida,
+        unidad_medida: newUnidadDeMedida,
         cantidad: newCantidad,
       })
       .eq('id_material', idMaterial);

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "vivero_taller_apps",
-    "slug": "vivero_taller_apps",
+    "name": "INACAP_VIVERO_TALLER_APPS",
+    "slug": "INACAP_VIVERO_TALLER_APPS",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -23,7 +23,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.t_o_r_o.vivero_taller_apps"
+      "package": "com.t_o_r_o.INACAP_VIVERO_TALLER_APPS"
     },
     "web": {
       "bundler": "metro",

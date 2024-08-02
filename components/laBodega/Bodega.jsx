@@ -30,7 +30,6 @@ const index = () => {
         <ItemsCard titulo="Materiales" screen="materiales" />
         <ItemsCard titulo="Plantas" screen="plan-tas" />
         <ItemsCard titulo="Tareas" screen="tareas" />
-        <ItemsCard titulo="testing" screen="testing-cards" />
       </View>
     </View>
   );
